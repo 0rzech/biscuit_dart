@@ -1,0 +1,25 @@
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    avoid_types_as_parameter_names: true
+    avoid_unused_constructor_parameters: true
+    omit_obvious_local_variable_types: true
+    parameter_assignments: true
+    prefer_const_constructors: true
+    prefer_final_in_for_each: true
+    prefer_final_locals: true
+    prefer_single_quotes: true
+    simplify_variable_pattern: true
+    sort_pub_dependencies: true
+
+analyzer:
+  exclude:
+    - '**.g.dart'
+    - android/**
+    - build/**
+    - ios/**
+    - linux/**
+    - macos/**
+    - web/**
+    - windows/**

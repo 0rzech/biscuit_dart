@@ -1,0 +1,17 @@
+name: biscuit_dart
+description: A starting point for Dart libraries or applications.
+version: 0.0.1
+publish_to: none
+
+workspace: []
+
+environment:
+  sdk: ^3.13.0
+
+dependencies:
+  # path: ^1.9.1
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
