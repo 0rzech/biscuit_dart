@@ -1,0 +1,52 @@
+name: Pages
+
+on:
+#  push:
+#    branches:
+#      - main
+  workflow_dispatch:
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  verification:
+    name: Publish to github pages
+
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment: github-pages
+
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/gmeligio/flutter-web@sha256:d6122a04d19ba511c58fafcdabd45bce8b5c48331de4d19bcc6bcb89f49ee29e # 3.47.0
+
+    timeout-minutes: 3
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v7
+      - name: Get packages
+        run: flutter pub get
+      - name: Build example web app
+        run: |
+          flutter build web \
+            --no-pub \
+            --no-wasm-dry-run \
+            --build-number '${{ github.run_number }}' \
+            --build-name '0.2.0' \
+            --dart-define 'repositoryUrl=${{ github.server_url }}/${{ github.repository }}/tree/${{ github.event.pull_request.head.sha || github.sha }}/packages/biscuit_auth_app' \
+            --dart-define 'commitHash=${{ github.event.pull_request.head.sha || github.sha }}' \
+            --base-href '/${{ github.event.repository.name }}/' \
+            --csp \
+            --release
+        working-directory: packages/biscuit_auth_app
+      - name: Upload example web app artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: packages/biscuit_auth_app/build/web/
+      - name: Publish example web app
+        uses: actions/deploy-pages@v5

@@ -1,0 +1,16 @@
+name: Weblate Pull Request Verification
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+    paths:
+      - '**'
+      - '!**/*.arb'
+
+jobs:
+  if-on-weblate-branch:
+    name: Check if on weblate branch
+    if: github.head_ref == 'weblate'
+    uses: ./.github/workflows/verification.yaml

@@ -1,10 +1,9 @@
-name: biscuit_dart
+name: biscuit_auth
 description: A starting point for Dart libraries or applications.
 version: 0.0.1
 publish_to: none
 
-workspace:
-  - packages/biscuit_auth
+resolution: workspace
 
 environment:
   sdk: ^3.13.0
