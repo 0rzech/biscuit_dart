@@ -21,6 +21,8 @@ jobs:
         run: tool/flutter_gen_l10n.dart
       - name: Check for missing localizations
         run: tool/check_missing_localizations.dart
+      - name: Run code generator
+        run: tool/dart_run_build_runner.dart
       - name: Check code formatting
         run: tool/dart_format.dart
       - name: Analyze code

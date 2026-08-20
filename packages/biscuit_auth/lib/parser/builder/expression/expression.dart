@@ -3,19 +3,21 @@
 
 import 'package:biscuit_auth/parser/builder/expression/op.dart';
 import 'package:biscuit_auth/parser/expression.dart';
+import 'package:biscuit_auth/src/boilerplate_gen_annotations.dart';
 import 'package:collection/collection.dart';
 
+part 'gen/expression.bp.dart';
+
+@boilerplate
 final class const Expression(final List<Op> ops) {
   factory fromAst(Expr expr) => .new(expr.toOpcodes());
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Expression && const ListEquality().equals(ops, other.ops);
+  bool operator ==(Object other) => _equals(other);
 
   @override
-  int get hashCode => Object.hash('Expression', const ListEquality().hash(ops));
+  int get hashCode => _hashCode;
 
   @override
-  String toString() => 'Expression($ops)';
+  String toString() => _toString();
 }

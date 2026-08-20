@@ -6,6 +6,7 @@
     <method v="2">
       <option name="RunConfigurationTask" enabled="true" run_configuration_name="Flutter: clean" run_configuration_type="DartCommandLineRunConfigurationType" />
       <option name="RunConfigurationTask" enabled="true" run_configuration_name="Flutter: gen-l10n" run_configuration_type="DartCommandLineRunConfigurationType" />
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Dart: run build-runner" run_configuration_type="DartCommandLineRunConfigurationType" />
     </method>
   </configuration>
 </component>

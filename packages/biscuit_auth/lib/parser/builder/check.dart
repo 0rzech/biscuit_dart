@@ -2,7 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import 'package:biscuit_auth/parser/builder/rule.dart';
+import 'package:biscuit_auth/src/boilerplate_gen_annotations.dart';
 import 'package:collection/collection.dart';
+
+part 'gen/check.bp.dart';
 
 sealed class const Check(final List<Rule> rules) {
   const factory one(List<Rule> rules) = OneCheck;
@@ -10,42 +13,38 @@ sealed class const Check(final List<Rule> rules) {
   const factory reject(List<Rule> rules) = RejectCheck;
 }
 
+@boilerplate
 final class const OneCheck(super.rules) extends Check {
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is OneCheck && const ListEquality().equals(rules, other.rules);
+  bool operator ==(Object other) => _equals(other);
 
   @override
-  int get hashCode => Object.hash('OneCheck', const ListEquality().hash(rules));
+  int get hashCode => _hashCode;
 
   @override
-  String toString() => 'OneCheck($rules}';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const AllCheck(super.rules) extends Check {
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is AllCheck && const ListEquality().equals(rules, other.rules);
+  bool operator ==(Object other) => _equals(other);
 
   @override
-  int get hashCode => Object.hash('AllCheck', const ListEquality().hash(rules));
+  int get hashCode => _hashCode;
 
   @override
-  String toString() => 'AllCheck($rules}';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const RejectCheck(super.rules) extends Check {
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is RejectCheck && const ListEquality().equals(rules, other.rules);
+  bool operator ==(Object other) => _equals(other);
 
   @override
-  int get hashCode =>
-      Object.hash('RejectCheck', const ListEquality().hash(rules));
+  int get hashCode => _hashCode;
 
   @override
-  String toString() => 'RejectCheck($rules}';
+  String toString() => _toString();
 }

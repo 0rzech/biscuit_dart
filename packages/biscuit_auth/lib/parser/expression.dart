@@ -3,8 +3,11 @@
 
 import 'package:biscuit_auth/parser/builder/expression/op.dart';
 import 'package:biscuit_auth/parser/builder/term.dart';
+import 'package:biscuit_auth/src/boilerplate_gen_annotations.dart';
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
+
+part 'gen/expression.bp.dart';
 
 sealed class const Expr() {
   const factory value(Term term) = ValueExpr;
@@ -26,21 +29,22 @@ sealed class const Expr() {
   void addOps(List<Op> ops);
 }
 
+@boilerplate
 final class const ValueExpr(final Term term) extends Expr {
   @override
   void addOps(List<Op> ops) => ops.add(.value(term));
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) || other is ValueExpr && term == other.term;
+  bool operator ==(Object other) => _equals(other);
 
   @override
-  int get hashCode => Object.hash('ValueExpr', term);
+  int get hashCode => _hashCode;
 
   @override
-  String toString() => 'ValueExpr(term: $term)';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const UnaryExpr(final UnaryOp op, final Expr expr) extends Expr {
   @override
   String? validate() => expr.validate();
@@ -52,17 +56,16 @@ final class const UnaryExpr(final UnaryOp op, final Expr expr) extends Expr {
   }
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is UnaryExpr && op == other.op && expr == other.expr;
+  bool operator ==(Object other) => _equals(other);
 
   @override
-  int get hashCode => Object.hash('UnaryExpr', op, expr);
+  int get hashCode => _hashCode;
 
   @override
-  String toString() => 'UnaryExpr(op: $op, expr: $expr)';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const BinaryExpr(
   final BinaryOp op,
   final Expr left,
@@ -96,20 +99,16 @@ final class const BinaryExpr(
   }
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is BinaryExpr &&
-          op == other.op &&
-          left == other.left &&
-          right == other.right;
+  bool operator ==(Object other) => _equals(other);
 
   @override
-  int get hashCode => Object.hash('BinaryExpr', op, left, right);
+  int get hashCode => _hashCode;
 
   @override
-  String toString() => 'BinaryExpr(op: $op, left: $left, right: $right)';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const ClosureExpr(final List<String> params, final Expr expr)
     extends Expr {
   @override
@@ -120,16 +119,11 @@ final class const ClosureExpr(final List<String> params, final Expr expr)
       ops.add(.closure(params: params, ops: expr.toOpcodes()));
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ClosureExpr &&
-          const ListEquality().equals(params, other.params) &&
-          expr == other.expr;
+  bool operator ==(Object other) => _equals(other);
 
   @override
-  int get hashCode =>
-      Object.hash('ClosureExpr', const ListEquality().hash(params), expr);
+  int get hashCode => _hashCode;
 
   @override
-  String toString() => 'ClosureExpr(params: $params, expr: $expr)';
+  String toString() => _toString();
 }

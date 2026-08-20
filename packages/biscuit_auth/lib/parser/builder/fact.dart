@@ -4,8 +4,12 @@
 import 'dart:collection';
 
 import 'package:biscuit_auth/parser/builder/term.dart';
+import 'package:biscuit_auth/src/boilerplate_gen_annotations.dart';
 import 'package:collection/collection.dart';
 
+part 'gen/fact.bp.dart';
+
+@boilerplate
 final class const Fact._(
   final Predicate predicate,
   final HashMap<String, Term?>? parameters,
@@ -20,32 +24,23 @@ final class const Fact._(
   }
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Fact &&
-          predicate == other.predicate &&
-          const MapEquality().equals(parameters, other.parameters);
+  bool operator ==(Object other) => _equals(other);
 
   @override
-  int get hashCode =>
-      Object.hash('Fact', predicate, const MapEquality().hash(parameters));
+  int get hashCode => _hashCode;
 
   @override
-  String toString() => 'Fact(predicate: $predicate, parameters: $parameters)';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class Predicate(final String name, [var List<Term> terms = const []]) {
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Predicate &&
-          name == other.name &&
-          const ListEquality().equals(terms, terms);
+  bool operator ==(Object other) => _equals(other);
 
   @override
-  int get hashCode =>
-      Object.hash('Predicate', name, const ListEquality().hash(terms));
+  int get hashCode => _hashCode;
 
   @override
-  String toString() => 'Predicate(name: $name, terms: $terms)';
+  String toString() => _toString();
 }

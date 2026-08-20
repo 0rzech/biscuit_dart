@@ -5,7 +5,10 @@ import 'dart:collection';
 import 'dart:typed_data';
 
 import 'package:biscuit_auth/parser/builder/compare_to.dart';
+import 'package:biscuit_auth/src/boilerplate_gen_annotations.dart';
 import 'package:collection/collection.dart';
+
+part 'gen/term.bp.dart';
 
 sealed class const Term() implements Comparable<Term> {
   const factory variable(String variable) = VariableTerm;
@@ -45,182 +48,173 @@ sealed class const Term() implements Comparable<Term> {
   }
 }
 
-abstract class const MapKey() extends Term {
+sealed class const MapKey() extends Term {
   const factory parameter(String parameter) = ParameterTerm;
-  const factory integer(int integer) = IntegerTerm;
+  const factory integer(int value) = IntegerTerm;
   const factory str(String string) = StrTerm;
 }
 
+@boilerplate
 final class const VariableTerm(final String variable) extends Term {
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is VariableTerm && variable == other.variable;
-
-  @override
-  int get hashCode => Object.hash('VariableTerm', variable);
-
   @override
   int compareTo(covariant VariableTerm other) =>
       variable.compareTo(other.variable);
 
   @override
-  String toString() => 'VariableTerm($variable)';
+  bool operator ==(Object other) => _equals(other);
+
+  @override
+  int get hashCode => _hashCode;
+
+  @override
+  String toString() => _toString();
 }
 
-final class const IntegerTerm(final int integer) extends MapKey {
+@boilerplate
+final class const IntegerTerm(final int value) extends MapKey {
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is IntegerTerm && integer == other.integer;
+  int compareTo(covariant IntegerTerm other) => value.compareTo(other.value);
 
   @override
-  int get hashCode => Object.hash('IntegerTerm', integer);
+  bool operator ==(Object other) => _equals(other);
 
   @override
-  int compareTo(covariant IntegerTerm other) =>
-      integer.compareTo(other.integer);
+  int get hashCode => _hashCode;
 
   @override
-  String toString() => 'IntegerTerm($integer)';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const StrTerm(final String string) extends MapKey {
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) || other is StrTerm && string == other.string;
-
-  @override
-  int get hashCode => Object.hash('StrTerm', string);
-
   @override
   int compareTo(covariant StrTerm other) => string.compareTo(other.string);
 
   @override
-  String toString() => 'StrTerm($string)';
+  bool operator ==(Object other) => _equals(other);
+
+  @override
+  int get hashCode => _hashCode;
+
+  @override
+  String toString() => _toString();
 }
 
+@boilerplate
 final class DateTerm extends Term {
   final int date;
 
   new(DateTime date) : date = date.millisecondsSinceEpoch ~/ 1_000;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) || other is DateTerm && date == other.date;
-
-  @override
-  int get hashCode => Object.hash('DateTerm', date);
-
-  @override
   int compareTo(covariant DateTerm other) => date.compareTo(other.date);
 
   @override
-  String toString() => 'DateTerm($date)';
+  bool operator ==(Object other) => _equals(other);
+
+  @override
+  int get hashCode => _hashCode;
+
+  @override
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const BytesTerm(final Uint8List bytes) extends Term {
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is BytesTerm && const ListEquality().equals(bytes, other.bytes);
-
-  @override
-  int get hashCode =>
-      Object.hash('BytesTerm', const ListEquality().hash(bytes));
-
   @override
   int compareTo(covariant BytesTerm other) => bytes.compareTo(other.bytes);
 
   @override
-  String toString() => 'BytesTerm($bytes)';
+  bool operator ==(Object other) => _equals(other);
+
+  @override
+  int get hashCode => _hashCode;
+
+  @override
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const BoolTerm(final bool boolean) extends Term {
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) || other is BoolTerm && boolean == other.boolean;
-
-  @override
-  int get hashCode => Object.hash('BoolTerm', boolean);
-
   @override
   int compareTo(covariant BoolTerm other) => boolean.compareTo(other.boolean);
 
   @override
-  String toString() => 'BoolTerm($boolean)';
+  bool operator ==(Object other) => _equals(other);
+
+  @override
+  int get hashCode => _hashCode;
+
+  @override
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const SetTerm(final SplayTreeSet<Term> set) extends Term {
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is SetTerm && const SetEquality().equals(set, other.set);
-
-  @override
-  int get hashCode => Object.hash('SetTerm', const SetEquality().hash(set));
-
   @override
   int compareTo(covariant SetTerm other) => set.compareTo(other.set);
 
   @override
-  String toString() => 'SetTerm($set)';
+  bool operator ==(Object other) => _equals(other);
+
+  @override
+  int get hashCode => _hashCode;
+
+  @override
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const ParameterTerm(final String parameter) extends MapKey {
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ParameterTerm && parameter == other.parameter;
-
-  @override
-  int get hashCode => Object.hash('ParameterTerm', parameter);
-
   @override
   int compareTo(covariant ParameterTerm other) =>
       parameter.compareTo(other.parameter);
 
   @override
-  String toString() => 'ParameterTerm($parameter)';
+  bool operator ==(Object other) => _equals(other);
+
+  @override
+  int get hashCode => _hashCode;
+
+  @override
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const NilTerm() extends Term {
   @override
   int compareTo(covariant NilTerm other) => 0;
 
   @override
-  String toString() => 'NilTerm';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const ArrayTerm(final List<Term> array) extends Term {
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ArrayTerm && const ListEquality().equals(array, other.array);
-
-  @override
-  int get hashCode =>
-      Object.hash('ArrayTerm', const ListEquality().hash(array));
-
   @override
   int compareTo(covariant ArrayTerm other) => array.compareTo(other.array);
 
   @override
-  String toString() => 'ArrayTerm($array)';
+  bool operator ==(Object other) => _equals(other);
+
+  @override
+  int get hashCode => _hashCode;
+
+  @override
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const MapTerm(final SplayTreeMap<MapKey, Term> map) extends Term {
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is MapTerm && const MapEquality().equals(map, other.map);
-
-  @override
-  int get hashCode => Object.hash('MapTerm', const MapEquality().hash(map));
-
   @override
   int compareTo(covariant MapTerm other) => map.compareTo(other.map);
 
   @override
-  String toString() => 'MapTerm($map)';
+  bool operator ==(Object other) => _equals(other);
+
+  @override
+  int get hashCode => _hashCode;
+
+  @override
+  String toString() => _toString();
 }

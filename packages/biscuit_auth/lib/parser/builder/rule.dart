@@ -8,8 +8,12 @@ import 'package:biscuit_auth/parser/builder/expression/op.dart';
 import 'package:biscuit_auth/parser/builder/fact.dart';
 import 'package:biscuit_auth/parser/builder/scope.dart';
 import 'package:biscuit_auth/parser/builder/term.dart';
+import 'package:biscuit_auth/src/boilerplate_gen_annotations.dart';
 import 'package:collection/collection.dart';
 
+part 'gen/rule.bp.dart';
+
+@boilerplate
 final class const Rule._({
   required final Predicate head,
   required final List<Predicate> body,
@@ -119,30 +123,11 @@ final class const Rule._({
   }
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Rule &&
-          head == other.head &&
-          const ListEquality().equals(body, other.body) &&
-          const ListEquality().equals(expressions, other.expressions) &&
-          const MapEquality().equals(parameters, other.parameters) &&
-          const ListEquality().equals(scopes, other.scopes) &&
-          const MapEquality().equals(scopeParameters, other.scopeParameters);
+  bool operator ==(Object other) => _equals(other);
 
   @override
-  int get hashCode => Object.hash(
-    'Rule',
-    head,
-    const ListEquality().hash(body),
-    const ListEquality().hash(expressions),
-    const MapEquality().hash(parameters),
-    const ListEquality().hash(scopes),
-    const MapEquality().hash(scopeParameters),
-  );
+  int get hashCode => _hashCode;
 
   @override
-  String toString() =>
-      'Rule(head: $head, body: $body, expressions: $expressions, '
-      'parameters: $parameters, scopes: $scopes, '
-      'scopeParameters: $scopeParameters)';
+  String toString() => _toString();
 }

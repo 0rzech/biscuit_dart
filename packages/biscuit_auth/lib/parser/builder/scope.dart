@@ -3,7 +3,10 @@
 
 import 'dart:typed_data';
 
+import 'package:biscuit_auth/src/boilerplate_gen_annotations.dart';
 import 'package:collection/collection.dart';
+
+part 'gen/scope.bp.dart';
 
 sealed class const Scope() {
   const factory authority() = AuthorityScope;
@@ -12,39 +15,40 @@ sealed class const Scope() {
   const factory parameter(String name) = ParameterScope;
 }
 
+@boilerplate
 final class const AuthorityScope() extends Scope {
   @override
-  String toString() => 'AuthorityScope';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const PreviousScope() extends Scope {
   @override
-  String toString() => 'PreviousScope';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const PublicKeyScope(final PublicKey publicKey) extends Scope {
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is PublicKeyScope && publicKey == other.publicKey;
+  bool operator ==(Object other) => _equals(other);
 
   @override
-  int get hashCode => Object.hash('PublicKeyScope', publicKey);
+  int get hashCode => _hashCode;
 
   @override
-  String toString() => 'PublicKeyScope($publicKey)';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const ParameterScope(final String name) extends Scope {
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) || other is ParameterScope && name == other.name;
+  bool operator ==(Object other) => _equals(other);
 
   @override
-  int get hashCode => Object.hash('ParameterScope', name);
+  int get hashCode => _hashCode;
 
   @override
-  String toString() => 'ParameterScope($name)';
+  String toString() => _toString();
 }
 
 sealed class const PublicKey(final Uint8List key) {
@@ -52,31 +56,26 @@ sealed class const PublicKey(final Uint8List key) {
   const factory secp256r1(Uint8List key) = Secp256r1PublicKey;
 }
 
+@boilerplate
 final class const Ed25519PublicKey(super.key) extends PublicKey {
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Ed25519PublicKey && const ListEquality().equals(key, other.key);
+  bool operator ==(Object other) => _equals(other);
 
   @override
-  int get hashCode =>
-      Object.hash('Ed25519PublicKey', key, const ListEquality().hash(key));
+  int get hashCode => _hashCode;
 
   @override
-  String toString() => 'Ed25519PublicKey($key)';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const Secp256r1PublicKey(super.key) extends PublicKey {
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Secp256r1PublicKey &&
-          const ListEquality().equals(key, other.key);
+  bool operator ==(Object other) => _equals(other);
 
   @override
-  int get hashCode =>
-      Object.hash('Secp256r1PublicKey', key, const ListEquality().hash(key));
+  int get hashCode => _hashCode;
 
   @override
-  String toString() => 'Secp256r1PublicKey($key)';
+  String toString() => _toString();
 }

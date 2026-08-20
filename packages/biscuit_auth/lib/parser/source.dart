@@ -6,8 +6,12 @@ import 'package:biscuit_auth/parser/builder/fact.dart';
 import 'package:biscuit_auth/parser/builder/policy.dart';
 import 'package:biscuit_auth/parser/builder/rule.dart';
 import 'package:biscuit_auth/parser/builder/scope.dart';
+import 'package:biscuit_auth/src/boilerplate_gen_annotations.dart';
 import 'package:collection/collection.dart';
 
+part 'gen/source.bp.dart';
+
+@boilerplate
 final class const Source({
   required final List<Scope> scopes,
   required final List<Fact> facts,
@@ -30,27 +34,11 @@ final class const Source({
   );
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Source &&
-          const ListEquality().equals(scopes, other.scopes) &&
-          const ListEquality().equals(facts, other.facts) &&
-          const ListEquality().equals(rules, other.rules) &&
-          const ListEquality().equals(checks, other.checks) &&
-          const ListEquality().equals(policies, other.policies);
+  bool operator ==(Object other) => _equals(other);
 
   @override
-  int get hashCode => Object.hash(
-    'Source',
-    const ListEquality().hash(scopes),
-    const ListEquality().hash(facts),
-    const ListEquality().hash(rules),
-    const ListEquality().hash(checks),
-    const ListEquality().hash(policies),
-  );
+  int get hashCode => _hashCode;
 
   @override
-  String toString() =>
-      'Source(scopes: $scopes, facts: $facts, rules: $rules, '
-      'checks: $checks, policies: $policies)';
+  String toString() => _toString();
 }

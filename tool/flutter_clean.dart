@@ -6,7 +6,7 @@
 import 'dart:io';
 
 final sep = Platform.pathSeparator;
-const dirNamesToDelete = ['localizations', 'failures'];
+const dirNamesToDelete = ['gen', 'localizations', 'failures'];
 
 Future<void> main() async {
   var errorCode = 0;
