@@ -15,7 +15,13 @@ dependencies:
   petitparser: ^7.0.2
 
 dev_dependencies:
+  analyzer: ^13.3.0
+  biscuit_auth:
+    path: packages/biscuit_auth
+  build: ^4.0.10
+  build_runner: ^2.16.0
   flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
   kiri_check: ^1.3.1
+  source_gen: ^4.2.4

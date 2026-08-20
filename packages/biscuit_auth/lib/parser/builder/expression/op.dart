@@ -4,7 +4,10 @@
 import 'dart:collection';
 
 import 'package:biscuit_auth/parser/builder/term.dart';
+import 'package:biscuit_auth/src/boilerplate_gen_annotations.dart';
 import 'package:collection/collection.dart';
+
+part 'gen/op.boilerplate.dart';
 
 sealed class const Op() {
   const factory value(Term term) = ValueOp;
@@ -60,16 +63,16 @@ sealed class const Op() {
   }
 }
 
+@boilerplate
 final class const ValueOp(final Term term) extends Op {
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) || other is ValueOp && term == other.term;
+  bool operator ==(Object other) => _equals(other);
 
   @override
-  int get hashCode => Object.hash('ValueOp', term);
+  int get hashCode => _hashCode;
 
   @override
-  String toString() => 'ValueOp($term)';
+  String toString() => _toString();
 }
 
 sealed class const UnaryOp() extends Op {
@@ -80,36 +83,40 @@ sealed class const UnaryOp() extends Op {
   const factory ffi(String name) = UnFfi;
 }
 
+@boilerplate
 final class const Negate() extends UnaryOp {
   @override
-  String toString() => 'Negate';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const Parens() extends UnaryOp {
   @override
-  String toString() => 'Parens';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const Length() extends UnaryOp {
   @override
-  String toString() => 'Length';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const Type() extends UnaryOp {
   @override
-  String toString() => 'Type';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const UnFfi(final String name) extends UnaryOp {
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) || other is UnFfi && name == other.name;
+  bool operator ==(Object other) => _equals(other);
 
   @override
-  int get hashCode => Object.hash('UnFfi', name);
+  int get hashCode => _hashCode;
 
   @override
-  String toString() => 'UnFfi($name)';
+  String toString() => _toString();
 }
 
 sealed class const BinaryOp() extends Op {
@@ -145,181 +152,203 @@ sealed class const BinaryOp() extends Op {
   const factory ffi(String name) = BinFfi;
 }
 
+@boilerplate
 final class const LessThan() extends BinaryOp {
   @override
-  String toString() => 'LessThan';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const GreaterThan() extends BinaryOp {
   @override
-  String toString() => 'GreaterThan';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const LessOrEqual() extends BinaryOp {
   @override
-  String toString() => 'LessOrEqual';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const GreaterOrEqual() extends BinaryOp {
   @override
-  String toString() => 'GreaterOrEqual';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const Equal() extends BinaryOp {
   @override
-  String toString() => 'Equal';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const Contains() extends BinaryOp {
   @override
-  String toString() => 'Contains';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const Prefix() extends BinaryOp {
   @override
-  String toString() => 'Prefix';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const Suffix() extends BinaryOp {
   @override
-  String toString() => 'Suffix';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const Regex() extends BinaryOp {
   @override
-  String toString() => 'Regex';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const Add() extends BinaryOp {
   @override
-  String toString() => 'Add';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const Sub() extends BinaryOp {
   @override
-  String toString() => 'Sub';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const Mul() extends BinaryOp {
   @override
-  String toString() => 'Mul';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const Div() extends BinaryOp {
   @override
-  String toString() => 'Div';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const And() extends BinaryOp {
   @override
-  String toString() => 'And';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const Or() extends BinaryOp {
   @override
-  String toString() => 'Or';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const Intersection() extends BinaryOp {
   @override
-  String toString() => 'Intersection';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const Union() extends BinaryOp {
   @override
-  String toString() => 'Union';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const BitwiseAnd() extends BinaryOp {
   @override
-  String toString() => 'BitwiseAnd';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const BitwiseOr() extends BinaryOp {
   @override
-  String toString() => 'BitwiseOr';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const BitwiseXor() extends BinaryOp {
   @override
-  String toString() => 'BitwiseXor';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const NotEqual() extends BinaryOp {
   @override
-  String toString() => 'NotEqual';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const HeterogeneousEqual() extends BinaryOp {
   @override
-  String toString() => 'HeterogeneousEqual';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const HeterogeneousNotEqual() extends BinaryOp {
   @override
-  String toString() => 'HeterogeneousNotEqual';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const LazyAnd() extends BinaryOp {
   @override
-  String toString() => 'LazyAnd';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const LazyOr() extends BinaryOp {
   @override
-  String toString() => 'LazyOr';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const All() extends BinaryOp {
   @override
-  String toString() => 'All';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const Any() extends BinaryOp {
   @override
-  String toString() => 'Any';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const Get() extends BinaryOp {
   @override
-  String toString() => 'Get';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const TryOr() extends BinaryOp {
   @override
-  String toString() => 'TryOr';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const BinFfi(final String name) extends BinaryOp {
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) || other is BinFfi && name == other.name;
+  bool operator ==(Object other) => _equals(other);
 
   @override
-  int get hashCode => Object.hash('BinFfi', name);
+  int get hashCode => _hashCode;
 
   @override
-  String toString() => 'BinFfi($name)';
+  String toString() => _toString();
 }
 
+@boilerplate
 final class const ClosureOp({
   required final List<String> params,
   required final List<Op> ops,
 }) extends Op {
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ClosureOp &&
-          const ListEquality().equals(params, other.params) &&
-          const ListEquality().equals(ops, other.ops);
+  bool operator ==(Object other) => _equals(other);
 
   @override
-  int get hashCode => Object.hash(
-    'ClosureOp',
-    const ListEquality().hash(params),
-    const ListEquality().hash(ops),
-  );
+  int get hashCode => _hashCode;
 
   @override
-  String toString() => 'ClosureOp(params: $params, ops: $ops)';
+  String toString() => _toString();
 }

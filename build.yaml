@@ -1,0 +1,14 @@
+builders:
+  boilerplate_gen:
+    import: 'tool/boilerplate_gen.dart'
+    builder_factories: ['boilerplateBuilder']
+    build_extensions: { '.dart': ['.boilerplate.dart'] }
+    auto_apply: all_packages
+    build_to: source
+
+global_options:
+  biscuit_dart|boilerplate_gen:
+    options:
+      build_extensions:
+        '^lib/{{path}}/{{file}}.dart': ['lib/{{path}}/gen/{{file}}.boilerplate.dart']
+        '^lib/{{file}}.dart': ['lib/gen/{{file}}.boilerplate.dart']

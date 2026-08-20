@@ -15,7 +15,11 @@ Future<void> main(List<String> arguments) async {
   final workDir = Directory('tool');
 
   try {
-    for (final tool in const ['flutter_clean.dart', 'flutter_gen_l10n.dart']) {
+    for (final tool in const [
+      'flutter_clean.dart',
+      'flutter_gen_l10n.dart',
+      'dart_run_build_runner.dart',
+    ]) {
       final result = await Process.start('dart', [
         'run',
         '${workDir.path}$sep$tool',
