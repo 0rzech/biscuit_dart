@@ -47,10 +47,11 @@ extension $DateTermExtension on DateTerm {
 extension $BytesTermExtension on BytesTerm {
   bool _equals(Object other) =>
       identical(this, other) ||
-      other is BytesTerm && const ListEquality().equals(bytes, other.bytes);
+      other is BytesTerm &&
+          const ListEquality<int>().equals(bytes, other.bytes);
 
   int get _hashCode =>
-      Object.hash('BytesTerm', const ListEquality().hash(bytes));
+      Object.hash('BytesTerm', const ListEquality<int>().hash(bytes));
 
   String _toString() => 'BytesTerm(bytes: $bytes)';
 }
@@ -67,9 +68,10 @@ extension $BoolTermExtension on BoolTerm {
 extension $SetTermExtension on SetTerm {
   bool _equals(Object other) =>
       identical(this, other) ||
-      other is SetTerm && const SetEquality().equals(set, other.set);
+      other is SetTerm && const SetEquality<Term>().equals(set, other.set);
 
-  int get _hashCode => Object.hash('SetTerm', const SetEquality().hash(set));
+  int get _hashCode =>
+      Object.hash('SetTerm', const SetEquality<Term>().hash(set));
 
   String _toString() => 'SetTerm(set: $set)';
 }
@@ -91,10 +93,11 @@ extension $NilTermExtension on NilTerm {
 extension $ArrayTermExtension on ArrayTerm {
   bool _equals(Object other) =>
       identical(this, other) ||
-      other is ArrayTerm && const ListEquality().equals(array, other.array);
+      other is ArrayTerm &&
+          const ListEquality<Term>().equals(array, other.array);
 
   int get _hashCode =>
-      Object.hash('ArrayTerm', const ListEquality().hash(array));
+      Object.hash('ArrayTerm', const ListEquality<Term>().hash(array));
 
   String _toString() => 'ArrayTerm(array: $array)';
 }
@@ -102,9 +105,11 @@ extension $ArrayTermExtension on ArrayTerm {
 extension $MapTermExtension on MapTerm {
   bool _equals(Object other) =>
       identical(this, other) ||
-      other is MapTerm && const MapEquality().equals(map, other.map);
+      other is MapTerm &&
+          const MapEquality<MapKey, Term>().equals(map, other.map);
 
-  int get _hashCode => Object.hash('MapTerm', const MapEquality().hash(map));
+  int get _hashCode =>
+      Object.hash('MapTerm', const MapEquality<MapKey, Term>().hash(map));
 
   String _toString() => 'MapTerm(map: $map)';
 }

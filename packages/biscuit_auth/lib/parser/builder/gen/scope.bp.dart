@@ -37,10 +37,11 @@ extension $ParameterScopeExtension on ParameterScope {
 extension $Ed25519PublicKeyExtension on Ed25519PublicKey {
   bool _equals(Object other) =>
       identical(this, other) ||
-      other is Ed25519PublicKey && const ListEquality().equals(key, other.key);
+      other is Ed25519PublicKey &&
+          const ListEquality<int>().equals(key, other.key);
 
   int get _hashCode =>
-      Object.hash('Ed25519PublicKey', const ListEquality().hash(key));
+      Object.hash('Ed25519PublicKey', const ListEquality<int>().hash(key));
 
   String _toString() => 'Ed25519PublicKey(key: $key)';
 }
@@ -49,10 +50,10 @@ extension $Secp256r1PublicKeyExtension on Secp256r1PublicKey {
   bool _equals(Object other) =>
       identical(this, other) ||
       other is Secp256r1PublicKey &&
-          const ListEquality().equals(key, other.key);
+          const ListEquality<int>().equals(key, other.key);
 
   int get _hashCode =>
-      Object.hash('Secp256r1PublicKey', const ListEquality().hash(key));
+      Object.hash('Secp256r1PublicKey', const ListEquality<int>().hash(key));
 
   String _toString() => 'Secp256r1PublicKey(key: $key)';
 }

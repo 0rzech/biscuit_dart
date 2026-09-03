@@ -170,13 +170,13 @@ extension $ClosureOpExtension on ClosureOp {
   bool _equals(Object other) =>
       identical(this, other) ||
       other is ClosureOp &&
-          const ListEquality().equals(params, other.params) &&
-          const ListEquality().equals(ops, other.ops);
+          const ListEquality<String>().equals(params, other.params) &&
+          const ListEquality<Op>().equals(ops, other.ops);
 
   int get _hashCode => Object.hash(
     'ClosureOp',
-    const ListEquality().hash(params),
-    const ListEquality().hash(ops),
+    const ListEquality<String>().hash(params),
+    const ListEquality<Op>().hash(ops),
   );
 
   String _toString() => 'ClosureOp(params: $params, ops: $ops)';

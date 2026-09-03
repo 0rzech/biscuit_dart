@@ -11,19 +11,19 @@ extension $SourceExtension on Source {
   bool _equals(Object other) =>
       identical(this, other) ||
       other is Source &&
-          const ListEquality().equals(scopes, other.scopes) &&
-          const ListEquality().equals(facts, other.facts) &&
-          const ListEquality().equals(rules, other.rules) &&
-          const ListEquality().equals(checks, other.checks) &&
-          const ListEquality().equals(policies, other.policies);
+          const ListEquality<Scope>().equals(scopes, other.scopes) &&
+          const ListEquality<Fact>().equals(facts, other.facts) &&
+          const ListEquality<Rule>().equals(rules, other.rules) &&
+          const ListEquality<Check>().equals(checks, other.checks) &&
+          const ListEquality<Policy>().equals(policies, other.policies);
 
   int get _hashCode => Object.hash(
     'Source',
-    const ListEquality().hash(scopes),
-    const ListEquality().hash(facts),
-    const ListEquality().hash(rules),
-    const ListEquality().hash(checks),
-    const ListEquality().hash(policies),
+    const ListEquality<Scope>().hash(scopes),
+    const ListEquality<Fact>().hash(facts),
+    const ListEquality<Rule>().hash(rules),
+    const ListEquality<Check>().hash(checks),
+    const ListEquality<Policy>().hash(policies),
   );
 
   String _toString() =>

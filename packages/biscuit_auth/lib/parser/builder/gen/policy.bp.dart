@@ -10,10 +10,11 @@ part of '../policy.dart';
 extension $AllowPolicyExtension on AllowPolicy {
   bool _equals(Object other) =>
       identical(this, other) ||
-      other is AllowPolicy && const ListEquality().equals(rules, other.rules);
+      other is AllowPolicy &&
+          const ListEquality<Rule>().equals(rules, other.rules);
 
   int get _hashCode =>
-      Object.hash('AllowPolicy', const ListEquality().hash(rules));
+      Object.hash('AllowPolicy', const ListEquality<Rule>().hash(rules));
 
   String _toString() => 'AllowPolicy(rules: $rules)';
 }
@@ -21,10 +22,11 @@ extension $AllowPolicyExtension on AllowPolicy {
 extension $DenyPolicyExtension on DenyPolicy {
   bool _equals(Object other) =>
       identical(this, other) ||
-      other is DenyPolicy && const ListEquality().equals(rules, other.rules);
+      other is DenyPolicy &&
+          const ListEquality<Rule>().equals(rules, other.rules);
 
   int get _hashCode =>
-      Object.hash('DenyPolicy', const ListEquality().hash(rules));
+      Object.hash('DenyPolicy', const ListEquality<Rule>().hash(rules));
 
   String _toString() => 'DenyPolicy(rules: $rules)';
 }

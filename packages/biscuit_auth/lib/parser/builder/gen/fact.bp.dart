@@ -12,10 +12,16 @@ extension $FactExtension on Fact {
       identical(this, other) ||
       other is Fact &&
           predicate == other.predicate &&
-          const MapEquality().equals(parameters, other.parameters);
+          const MapEquality<String, Term?>().equals(
+            parameters,
+            other.parameters,
+          );
 
-  int get _hashCode =>
-      Object.hash('Fact', predicate, const MapEquality().hash(parameters));
+  int get _hashCode => Object.hash(
+    'Fact',
+    predicate,
+    const MapEquality<String, Term?>().hash(parameters),
+  );
 
   String _toString() => 'Fact(predicate: $predicate, parameters: $parameters)';
 }
@@ -25,10 +31,10 @@ extension $PredicateExtension on Predicate {
       identical(this, other) ||
       other is Predicate &&
           name == other.name &&
-          const ListEquality().equals(terms, other.terms);
+          const ListEquality<Term>().equals(terms, other.terms);
 
   int get _hashCode =>
-      Object.hash('Predicate', name, const ListEquality().hash(terms));
+      Object.hash('Predicate', name, const ListEquality<Term>().hash(terms));
 
   String _toString() => 'Predicate(name: $name, terms: $terms)';
 }

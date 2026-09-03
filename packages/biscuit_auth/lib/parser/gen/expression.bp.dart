@@ -43,11 +43,14 @@ extension $ClosureExprExtension on ClosureExpr {
   bool _equals(Object other) =>
       identical(this, other) ||
       other is ClosureExpr &&
-          const ListEquality().equals(params, other.params) &&
+          const ListEquality<String>().equals(params, other.params) &&
           expr == other.expr;
 
-  int get _hashCode =>
-      Object.hash('ClosureExpr', const ListEquality().hash(params), expr);
+  int get _hashCode => Object.hash(
+    'ClosureExpr',
+    const ListEquality<String>().hash(params),
+    expr,
+  );
 
   String _toString() => 'ClosureExpr(params: $params, expr: $expr)';
 }

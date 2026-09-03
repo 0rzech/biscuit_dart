@@ -10,10 +10,11 @@ part of '../check.dart';
 extension $OneCheckExtension on OneCheck {
   bool _equals(Object other) =>
       identical(this, other) ||
-      other is OneCheck && const ListEquality().equals(rules, other.rules);
+      other is OneCheck &&
+          const ListEquality<Rule>().equals(rules, other.rules);
 
   int get _hashCode =>
-      Object.hash('OneCheck', const ListEquality().hash(rules));
+      Object.hash('OneCheck', const ListEquality<Rule>().hash(rules));
 
   String _toString() => 'OneCheck(rules: $rules)';
 }
@@ -21,10 +22,11 @@ extension $OneCheckExtension on OneCheck {
 extension $AllCheckExtension on AllCheck {
   bool _equals(Object other) =>
       identical(this, other) ||
-      other is AllCheck && const ListEquality().equals(rules, other.rules);
+      other is AllCheck &&
+          const ListEquality<Rule>().equals(rules, other.rules);
 
   int get _hashCode =>
-      Object.hash('AllCheck', const ListEquality().hash(rules));
+      Object.hash('AllCheck', const ListEquality<Rule>().hash(rules));
 
   String _toString() => 'AllCheck(rules: $rules)';
 }
@@ -32,10 +34,11 @@ extension $AllCheckExtension on AllCheck {
 extension $RejectCheckExtension on RejectCheck {
   bool _equals(Object other) =>
       identical(this, other) ||
-      other is RejectCheck && const ListEquality().equals(rules, other.rules);
+      other is RejectCheck &&
+          const ListEquality<Rule>().equals(rules, other.rules);
 
   int get _hashCode =>
-      Object.hash('RejectCheck', const ListEquality().hash(rules));
+      Object.hash('RejectCheck', const ListEquality<Rule>().hash(rules));
 
   String _toString() => 'RejectCheck(rules: $rules)';
 }
