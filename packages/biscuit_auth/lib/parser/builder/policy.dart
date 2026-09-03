@@ -4,9 +4,11 @@
 import 'package:biscuit_auth/parser/builder/rule.dart';
 import 'package:biscuit_auth/src/boilerplate_gen_annotations.dart';
 import 'package:collection/collection.dart';
+import 'package:meta/meta.dart';
 
 part 'gen/policy.bp.dart';
 
+@immutable
 sealed class const Policy(final List<Rule> rules) {
   const factory allow(List<Rule> rules) = AllowPolicy;
   const factory deny(List<Rule> rules) = DenyPolicy;

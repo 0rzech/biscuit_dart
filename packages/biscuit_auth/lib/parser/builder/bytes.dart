@@ -31,3 +31,20 @@ int hexFromCodeUnit(int codeUnit) => switch (codeUnit) {
     'Invalid hex character: ${String.fromCharCode(codeUnit)}',
   ),
 };
+
+String uint8ListToBytesStr(Uint8List bytes, {String prefix = ''}) {
+  final sb = StringBuffer(prefix);
+
+  for (final byte in bytes) {
+    sb.writeCharCode(codeUnitFromHex(byte >> 4));
+    sb.writeCharCode(codeUnitFromHex(byte & 0x0F));
+  }
+
+  return sb.toString();
+}
+
+int codeUnitFromHex(int nibble) => switch (nibble) {
+  >= 0 && <= 9 => nibble + 48, // '0'-'9'
+  >= 10 && <= 15 => nibble + 87, // 'a'-'f'
+  _ => throw RangeError('Invalid nibble value: $nibble'),
+};

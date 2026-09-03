@@ -9,6 +9,7 @@ import 'package:meta/meta.dart';
 
 part 'gen/expression.bp.dart';
 
+@immutable
 sealed class const Expr() {
   const factory value(Term term) = ValueExpr;
   const factory unary(UnaryOp op, Expr expr) = UnaryExpr;

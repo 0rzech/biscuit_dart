@@ -5,9 +5,11 @@ import 'package:biscuit_auth/parser/builder/expression/op.dart';
 import 'package:biscuit_auth/parser/expression.dart';
 import 'package:biscuit_auth/src/boilerplate_gen_annotations.dart';
 import 'package:collection/collection.dart';
+import 'package:meta/meta.dart';
 
 part 'gen/expression.bp.dart';
 
+@immutable
 @boilerplate
 final class const Expression(final List<Op> ops) {
   factory fromAst(Expr expr) => .new(expr.toOpcodes());

@@ -9,11 +9,11 @@ part of '../term.dart';
 
 extension $VariableTermExtension on VariableTerm {
   bool _equals(Object other) =>
-      identical(this, other) || other is VariableTerm && value == other.value;
+      identical(this, other) || other is VariableTerm && id == other.id;
 
-  int get _hashCode => Object.hash('VariableTerm', value);
+  int get _hashCode => Object.hash('VariableTerm', id);
 
-  String _toString() => 'VariableTerm(value: $value)';
+  String _toString() => 'VariableTerm(id: $id)';
 }
 
 extension $IntTermExtension on IntTerm {
@@ -27,11 +27,11 @@ extension $IntTermExtension on IntTerm {
 
 extension $StrTermExtension on StrTerm {
   bool _equals(Object other) =>
-      identical(this, other) || other is StrTerm && value == other.value;
+      identical(this, other) || other is StrTerm && id == other.id;
 
-  int get _hashCode => Object.hash('StrTerm', value);
+  int get _hashCode => Object.hash('StrTerm', id);
 
-  String _toString() => 'StrTerm(value: $value)';
+  String _toString() => 'StrTerm(id: $id)';
 }
 
 extension $DateTermExtension on DateTerm {
@@ -73,15 +73,6 @@ extension $SetTermExtension on SetTerm {
       Object.hash('SetTerm', const SetEquality<Term>().hash(value));
 
   String _toString() => 'SetTerm(value: $value)';
-}
-
-extension $ParameterTermExtension on ParameterTerm {
-  bool _equals(Object other) =>
-      identical(this, other) || other is ParameterTerm && value == other.value;
-
-  int get _hashCode => Object.hash('ParameterTerm', value);
-
-  String _toString() => 'ParameterTerm(value: $value)';
 }
 
 extension $NilTermExtension on NilTerm {

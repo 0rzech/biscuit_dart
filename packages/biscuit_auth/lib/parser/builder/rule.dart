@@ -10,9 +10,11 @@ import 'package:biscuit_auth/parser/builder/scope.dart';
 import 'package:biscuit_auth/parser/builder/term.dart';
 import 'package:biscuit_auth/src/boilerplate_gen_annotations.dart';
 import 'package:collection/collection.dart';
+import 'package:meta/meta.dart';
 
 part 'gen/rule.bp.dart';
 
+@immutable
 @boilerplate
 final class const Rule._({
   required final Predicate head,
@@ -90,23 +92,23 @@ final class const Rule._({
     final freeVariables = HashSet<String>();
 
     for (final term in head.terms) {
-      if (term case VariableTerm(:final variable)) {
-        freeVariables.add(variable);
+      if (term case VariableTerm(:final value)) {
+        freeVariables.add(value);
       }
     }
 
     for (final expression in expressions) {
       for (final op in expression.ops) {
-        if (op case ValueOp(term: VariableTerm(:final variable))) {
-          freeVariables.add(variable);
+        if (op case ValueOp(term: VariableTerm(:final value))) {
+          freeVariables.add(value);
         }
       }
     }
 
     for (final predicate in body) {
       for (final term in predicate.terms) {
-        if (term case VariableTerm(:final variable)) {
-          freeVariables.remove(variable);
+        if (term case VariableTerm(:final value)) {
+          freeVariables.remove(value);
           if (freeVariables.isEmpty) {
             return null;
           }

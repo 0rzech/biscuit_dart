@@ -19,6 +19,7 @@ import 'package:biscuit_auth/parser/source.dart';
 import 'package:meta/meta.dart';
 import 'package:petitparser/petitparser.dart';
 
+@immutable
 final class const DatalogGrammar() extends GrammarDefinition {
   @override
   Parser<Source> start() =>
@@ -566,7 +567,7 @@ final class const DatalogGrammar() extends GrammarDefinition {
 
   @visibleForTesting
   Parser<Term> integer() =>
-      ref0(integerParser).map((i) => Term.integer(i)).labeled('integer');
+      ref0(integerParser).map((i) => Term.int(i)).labeled('integer');
 
   @visibleForTesting
   Parser<int> integerParser() => seq2(char('-').optional(), digit().plus())

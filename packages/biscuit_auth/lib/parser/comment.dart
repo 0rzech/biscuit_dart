@@ -2,9 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import 'package:biscuit_auth/src/boilerplate_gen_annotations.dart';
+import 'package:meta/meta.dart';
 
 part 'gen/comment.bp.dart';
 
+@immutable
 sealed class const Comment() {
   const factory line() = LineComment;
   const factory multiLine() = MultiLineComment;

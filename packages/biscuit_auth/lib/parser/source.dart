@@ -8,9 +8,11 @@ import 'package:biscuit_auth/parser/builder/rule.dart';
 import 'package:biscuit_auth/parser/builder/scope.dart';
 import 'package:biscuit_auth/src/boilerplate_gen_annotations.dart';
 import 'package:collection/collection.dart';
+import 'package:meta/meta.dart';
 
 part 'gen/source.bp.dart';
 
+@immutable
 @boilerplate
 final class const Source({
   required final List<Scope> scopes,

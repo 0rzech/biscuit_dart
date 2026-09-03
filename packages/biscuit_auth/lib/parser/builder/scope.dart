@@ -5,9 +5,11 @@ import 'dart:typed_data';
 
 import 'package:biscuit_auth/src/boilerplate_gen_annotations.dart';
 import 'package:collection/collection.dart';
+import 'package:meta/meta.dart';
 
 part 'gen/scope.bp.dart';
 
+@immutable
 sealed class const Scope() {
   const factory authority() = AuthorityScope;
   const factory previous() = PreviousScope;

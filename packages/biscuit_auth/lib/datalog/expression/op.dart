@@ -1,9 +1,8 @@
 // Copyright 2026 Piotr Mieczysław Orzechowski
 // SPDX-License-Identifier: Apache-2.0
 
-import 'dart:collection';
-
-import 'package:biscuit_auth/parser/builder/term.dart';
+import 'package:biscuit_auth/datalog/symbol.dart';
+import 'package:biscuit_auth/datalog/term.dart';
 import 'package:biscuit_auth/src/boilerplate_gen_annotations.dart';
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
@@ -17,7 +16,7 @@ sealed class const Op() {
   const factory parens() = UnaryOp.parens;
   const factory length() = UnaryOp.length;
   const factory type() = UnaryOp.type;
-  const factory unFfi(String name) = UnFfi;
+  const factory unFfi(SymbolId name) = UnFfi;
   const factory lessThan() = BinaryOp.lessThan;
   const factory greaterThan() = BinaryOp.greaterThan;
   const factory lessOrEqual() = BinaryOp.lessOrEqual;
@@ -47,22 +46,11 @@ sealed class const Op() {
   const factory any() = BinaryOp.any;
   const factory get() = BinaryOp.get;
   const factory tryOr() = BinaryOp.tryOr;
-  const factory binFfi(String name) = BinaryOp.ffi;
-  const factory closure({required List<String> params, required List<Op> ops}) =
-      ClosureOp;
-
-  void collectParameters(HashMap<String, Term?> parameters) {
-    switch (this) {
-      case ValueOp(:final term):
-        term.extractParameters(parameters);
-      case ClosureOp(params: _, :final ops):
-        for (final op in ops) {
-          op.collectParameters(parameters);
-        }
-      default:
-        {}
-    }
-  }
+  const factory binFfi(SymbolId id) = BinaryOp.ffi;
+  const factory closure({
+    required List<SymbolId> params,
+    required List<Op> ops,
+  }) = ClosureOp;
 }
 
 @boilerplate
@@ -82,11 +70,16 @@ sealed class const UnaryOp() extends Op {
   const factory parens() = Parens;
   const factory length() = Length;
   const factory type() = Type;
-  const factory ffi(String name) = UnFfi;
+  const factory ffi(SymbolId id) = UnFfi;
+
+  String stringify(String symbol, SymbolTable symbols);
 }
 
 @boilerplate
 final class const Negate() extends UnaryOp {
+  @override
+  String stringify(String symbol, SymbolTable _) => '!$symbol';
+
   @override
   String toString() => _toString();
 }
@@ -94,11 +87,17 @@ final class const Negate() extends UnaryOp {
 @boilerplate
 final class const Parens() extends UnaryOp {
   @override
+  String stringify(String symbol, SymbolTable _) => '($symbol)';
+
+  @override
   String toString() => _toString();
 }
 
 @boilerplate
 final class const Length() extends UnaryOp {
+  @override
+  String stringify(String symbol, SymbolTable _) => '$symbol.length()';
+
   @override
   String toString() => _toString();
 }
@@ -106,11 +105,18 @@ final class const Length() extends UnaryOp {
 @boilerplate
 final class const Type() extends UnaryOp {
   @override
+  String stringify(String symbol, SymbolTable _) => '$symbol.type()';
+
+  @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const UnFfi(final String name) extends UnaryOp {
+final class const UnFfi(final SymbolId id) extends UnaryOp {
+  @override
+  String stringify(String symbol, SymbolTable symbols) =>
+      '$symbol.extern::${symbols.getOrDefault(id)}()';
+
   @override
   bool operator ==(Object other) => _equals(other);
 
@@ -151,11 +157,17 @@ sealed class const BinaryOp() extends Op {
   const factory any() = Any;
   const factory get() = Get;
   const factory tryOr() = TryOr;
-  const factory ffi(String name) = BinFfi;
+  const factory ffi(SymbolId id) = BinFfi;
+
+  String stringify(String left, String right, SymbolTable symbols);
 }
 
 @boilerplate
 final class const LessThan() extends BinaryOp {
+  @override
+  String stringify(String left, String right, SymbolTable _) =>
+      '$left < $right';
+
   @override
   String toString() => _toString();
 }
@@ -163,11 +175,19 @@ final class const LessThan() extends BinaryOp {
 @boilerplate
 final class const GreaterThan() extends BinaryOp {
   @override
+  String stringify(String left, String right, SymbolTable _) =>
+      '$left > $right';
+
+  @override
   String toString() => _toString();
 }
 
 @boilerplate
 final class const LessOrEqual() extends BinaryOp {
+  @override
+  String stringify(String left, String right, SymbolTable _) =>
+      '$left <= $right';
+
   @override
   String toString() => _toString();
 }
@@ -175,11 +195,19 @@ final class const LessOrEqual() extends BinaryOp {
 @boilerplate
 final class const GreaterOrEqual() extends BinaryOp {
   @override
+  String stringify(String left, String right, SymbolTable _) =>
+      '$left >= $right';
+
+  @override
   String toString() => _toString();
 }
 
 @boilerplate
 final class const Equal() extends BinaryOp {
+  @override
+  String stringify(String left, String right, SymbolTable _) =>
+      '$left === $right';
+
   @override
   String toString() => _toString();
 }
@@ -187,11 +215,19 @@ final class const Equal() extends BinaryOp {
 @boilerplate
 final class const Contains() extends BinaryOp {
   @override
+  String stringify(String left, String right, SymbolTable _) =>
+      '$left.contains($right)';
+
+  @override
   String toString() => _toString();
 }
 
 @boilerplate
 final class const Prefix() extends BinaryOp {
+  @override
+  String stringify(String left, String right, SymbolTable _) =>
+      '$left.starts_with($right)';
+
   @override
   String toString() => _toString();
 }
@@ -199,11 +235,19 @@ final class const Prefix() extends BinaryOp {
 @boilerplate
 final class const Suffix() extends BinaryOp {
   @override
+  String stringify(String left, String right, SymbolTable _) =>
+      '$left.ends_with($right)';
+
+  @override
   String toString() => _toString();
 }
 
 @boilerplate
 final class const Regex() extends BinaryOp {
+  @override
+  String stringify(String left, String right, SymbolTable _) =>
+      '$left.matches($right)';
+
   @override
   String toString() => _toString();
 }
@@ -211,11 +255,19 @@ final class const Regex() extends BinaryOp {
 @boilerplate
 final class const Add() extends BinaryOp {
   @override
+  String stringify(String left, String right, SymbolTable _) =>
+      '$left + $right';
+
+  @override
   String toString() => _toString();
 }
 
 @boilerplate
 final class const Sub() extends BinaryOp {
+  @override
+  String stringify(String left, String right, SymbolTable _) =>
+      '$left - $right';
+
   @override
   String toString() => _toString();
 }
@@ -223,11 +275,19 @@ final class const Sub() extends BinaryOp {
 @boilerplate
 final class const Mul() extends BinaryOp {
   @override
+  String stringify(String left, String right, SymbolTable _) =>
+      '$left * $right';
+
+  @override
   String toString() => _toString();
 }
 
 @boilerplate
 final class const Div() extends BinaryOp {
+  @override
+  String stringify(String left, String right, SymbolTable _) =>
+      '$left / $right';
+
   @override
   String toString() => _toString();
 }
@@ -235,11 +295,19 @@ final class const Div() extends BinaryOp {
 @boilerplate
 final class const And() extends BinaryOp {
   @override
+  String stringify(String left, String right, SymbolTable _) =>
+      '$left &&! $right';
+
+  @override
   String toString() => _toString();
 }
 
 @boilerplate
 final class const Or() extends BinaryOp {
+  @override
+  String stringify(String left, String right, SymbolTable _) =>
+      '$left ||! $right';
+
   @override
   String toString() => _toString();
 }
@@ -247,11 +315,19 @@ final class const Or() extends BinaryOp {
 @boilerplate
 final class const Intersection() extends BinaryOp {
   @override
+  String stringify(String left, String right, SymbolTable _) =>
+      '$left.intersection($right)';
+
+  @override
   String toString() => _toString();
 }
 
 @boilerplate
 final class const Union() extends BinaryOp {
+  @override
+  String stringify(String left, String right, SymbolTable _) =>
+      '$left.union($right)';
+
   @override
   String toString() => _toString();
 }
@@ -259,11 +335,19 @@ final class const Union() extends BinaryOp {
 @boilerplate
 final class const BitwiseAnd() extends BinaryOp {
   @override
+  String stringify(String left, String right, SymbolTable _) =>
+      '$left & $right';
+
+  @override
   String toString() => _toString();
 }
 
 @boilerplate
 final class const BitwiseOr() extends BinaryOp {
+  @override
+  String stringify(String left, String right, SymbolTable _) =>
+      '$left | $right';
+
   @override
   String toString() => _toString();
 }
@@ -271,11 +355,19 @@ final class const BitwiseOr() extends BinaryOp {
 @boilerplate
 final class const BitwiseXor() extends BinaryOp {
   @override
+  String stringify(String left, String right, SymbolTable _) =>
+      '$left ^ $right';
+
+  @override
   String toString() => _toString();
 }
 
 @boilerplate
 final class const NotEqual() extends BinaryOp {
+  @override
+  String stringify(String left, String right, SymbolTable _) =>
+      '$left !== $right';
+
   @override
   String toString() => _toString();
 }
@@ -283,11 +375,19 @@ final class const NotEqual() extends BinaryOp {
 @boilerplate
 final class const HeterogeneousEqual() extends BinaryOp {
   @override
+  String stringify(String left, String right, SymbolTable _) =>
+      '$left == $right';
+
+  @override
   String toString() => _toString();
 }
 
 @boilerplate
 final class const HeterogeneousNotEqual() extends BinaryOp {
+  @override
+  String stringify(String left, String right, SymbolTable _) =>
+      '$left != $right';
+
   @override
   String toString() => _toString();
 }
@@ -295,11 +395,19 @@ final class const HeterogeneousNotEqual() extends BinaryOp {
 @boilerplate
 final class const LazyAnd() extends BinaryOp {
   @override
+  String stringify(String left, String right, SymbolTable _) =>
+      '$left && $right';
+
+  @override
   String toString() => _toString();
 }
 
 @boilerplate
 final class const LazyOr() extends BinaryOp {
+  @override
+  String stringify(String left, String right, SymbolTable _) =>
+      '$left || $right';
+
   @override
   String toString() => _toString();
 }
@@ -307,11 +415,19 @@ final class const LazyOr() extends BinaryOp {
 @boilerplate
 final class const All() extends BinaryOp {
   @override
+  String stringify(String left, String right, SymbolTable _) =>
+      '$left.all($right)';
+
+  @override
   String toString() => _toString();
 }
 
 @boilerplate
 final class const Any() extends BinaryOp {
+  @override
+  String stringify(String left, String right, SymbolTable _) =>
+      '$left.any($right)';
+
   @override
   String toString() => _toString();
 }
@@ -319,17 +435,29 @@ final class const Any() extends BinaryOp {
 @boilerplate
 final class const Get() extends BinaryOp {
   @override
+  String stringify(String left, String right, SymbolTable _) =>
+      '$left.get($right)';
+
+  @override
   String toString() => _toString();
 }
 
 @boilerplate
 final class const TryOr() extends BinaryOp {
   @override
+  String stringify(String left, String right, SymbolTable _) =>
+      '$left.tryOr($right)';
+
+  @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const BinFfi(final String name) extends BinaryOp {
+final class const BinFfi(final SymbolId id) extends BinaryOp {
+  @override
+  String stringify(String left, String right, SymbolTable symbols) =>
+      '$left.extern::${symbols.getOrDefault(id)}($right)';
+
   @override
   bool operator ==(Object other) => _equals(other);
 
@@ -342,7 +470,7 @@ final class const BinFfi(final String name) extends BinaryOp {
 
 @boilerplate
 final class const ClosureOp({
-  required final List<String> params,
+  required final List<SymbolId> params,
   required final List<Op> ops,
 }) extends Op {
   @override
