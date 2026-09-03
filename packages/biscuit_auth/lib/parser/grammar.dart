@@ -398,10 +398,10 @@ final class const DatalogGrammar() extends GrammarDefinition {
   }
 
   @visibleForTesting
-  Parser<(BinaryOp, List<String>?, Expr)> binaryMethod(
+  Parser<(Binary, List<String>?, Expr)> binaryMethod(
     ExpressionBuilder<Expr> builder,
   ) {
-    final regularOp = <Parser<BinaryOp>>[
+    final regularOp = <Parser<Binary>>[
       string('contains').map((_) => const .contains()),
       string('starts_with').map((_) => const .prefix()),
       string('ends_with').map((_) => const .suffix()),
@@ -418,7 +418,7 @@ final class const DatalogGrammar() extends GrammarDefinition {
       builder.loopback,
     ).map2((op, expr) => (op, null, expr));
 
-    final quantifierOp = <Parser<BinaryOp>>[
+    final quantifierOp = <Parser<Binary>>[
       string('all').map((_) => const .all()),
       string('any').map((_) => const .any()),
     ].toChoiceParser();
@@ -436,8 +436,8 @@ final class const DatalogGrammar() extends GrammarDefinition {
   }
 
   @visibleForTesting
-  Parser<UnaryOp> unaryMethod() {
-    return <Parser<UnaryOp>>[
+  Parser<Unary> unaryMethod() {
+    return <Parser<Unary>>[
           string('length').map((_) => const .length()),
           string('type').map((_) => const .type()),
           ref0(name).skip(before: string('extern::')).map((name) => .ffi(name)),

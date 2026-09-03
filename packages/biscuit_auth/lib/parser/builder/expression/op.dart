@@ -25,51 +25,51 @@ sealed class const Op() {
   const factory array(List<Term> value) = Term.array;
   const factory map(SplayTreeMap<MapKey, Term> value) = Term.map;
 
-  const factory negate() = UnaryOp.negate;
-  const factory parens() = UnaryOp.parens;
-  const factory length() = UnaryOp.length;
-  const factory type() = UnaryOp.type;
-  const factory unFfi(String name) = UnaryOp.ffi;
+  const factory negate() = Unary.negate;
+  const factory parens() = Unary.parens;
+  const factory length() = Unary.length;
+  const factory type() = Unary.type;
+  const factory unFfi(String name) = Unary.ffi;
 
-  const factory lessThan() = BinaryOp.lessThan;
-  const factory greaterThan() = BinaryOp.greaterThan;
-  const factory lessOrEqual() = BinaryOp.lessOrEqual;
-  const factory greaterOrEqual() = BinaryOp.greaterOrEqual;
-  const factory equal() = BinaryOp.equal;
-  const factory contains() = BinaryOp.contains;
-  const factory prefix() = BinaryOp.prefix;
-  const factory suffix() = BinaryOp.suffix;
-  const factory regex() = BinaryOp.regex;
-  const factory add() = BinaryOp.add;
-  const factory sub() = BinaryOp.sub;
-  const factory mul() = BinaryOp.mul;
-  const factory div() = BinaryOp.div;
-  const factory and() = BinaryOp.and;
-  const factory or() = BinaryOp.or;
-  const factory intersection() = BinaryOp.intersection;
-  const factory union() = BinaryOp.union;
-  const factory bitwiseAnd() = BinaryOp.bitwiseAnd;
-  const factory bitwiseOr() = BinaryOp.bitwiseOr;
-  const factory bitwiseXor() = BinaryOp.bitwiseXor;
-  const factory notEqual() = BinaryOp.notEqual;
-  const factory heterogeneousEqual() = BinaryOp.heterogeneousEqual;
-  const factory heterogeneousNotEqual() = BinaryOp.heterogeneousNotEqual;
-  const factory lazyAnd() = BinaryOp.lazyAnd;
-  const factory lazyOr() = BinaryOp.lazyOr;
-  const factory all() = BinaryOp.all;
-  const factory any() = BinaryOp.any;
-  const factory get() = BinaryOp.get;
-  const factory tryOr() = BinaryOp.tryOr;
-  const factory binFfi(String name) = BinaryOp.ffi;
+  const factory lessThan() = Binary.lessThan;
+  const factory greaterThan() = Binary.greaterThan;
+  const factory lessOrEqual() = Binary.lessOrEqual;
+  const factory greaterOrEqual() = Binary.greaterOrEqual;
+  const factory equal() = Binary.equal;
+  const factory contains() = Binary.contains;
+  const factory prefix() = Binary.prefix;
+  const factory suffix() = Binary.suffix;
+  const factory regex() = Binary.regex;
+  const factory add() = Binary.add;
+  const factory sub() = Binary.sub;
+  const factory mul() = Binary.mul;
+  const factory div() = Binary.div;
+  const factory and() = Binary.and;
+  const factory or() = Binary.or;
+  const factory intersection() = Binary.intersection;
+  const factory union() = Binary.union;
+  const factory bitwiseAnd() = Binary.bitwiseAnd;
+  const factory bitwiseOr() = Binary.bitwiseOr;
+  const factory bitwiseXor() = Binary.bitwiseXor;
+  const factory notEqual() = Binary.notEqual;
+  const factory heterogeneousEqual() = Binary.heterogeneousEqual;
+  const factory heterogeneousNotEqual() = Binary.heterogeneousNotEqual;
+  const factory lazyAnd() = Binary.lazyAnd;
+  const factory lazyOr() = Binary.lazyOr;
+  const factory all() = Binary.all;
+  const factory any() = Binary.any;
+  const factory get() = Binary.get;
+  const factory tryOr() = Binary.tryOr;
+  const factory binFfi(String name) = Binary.ffi;
 
   const factory closure({required List<String> params, required List<Op> ops}) =
-      ClosureOp;
+      Closure;
 
   void collectParameters(HashMap<String, Term?> parameters) {
     switch (this) {
       case final Term term:
         term.extractParameters(parameters);
-      case ClosureOp(params: _, :final ops):
+      case Closure(params: _, :final ops):
         for (final op in ops) {
           op.collectParameters(parameters);
         }
@@ -80,36 +80,36 @@ sealed class const Op() {
 }
 
 sealed class const Term() extends Op implements Comparable<Term> {
-  const factory variable(String value) = VariableTerm;
-  const factory int(int value) = IntTerm;
-  const factory str(String value) = StrTerm;
-  factory date(DateTime value) = DateTerm;
-  const factory bytes(Uint8List value) = BytesTerm;
-  const factory bool(bool value) = BoolTerm;
-  const factory set(SplayTreeSet<Term> value) = SetTerm;
-  const factory parameter(String value) = ParameterTerm;
-  const factory nil() = NilTerm;
-  const factory array(List<Term> value) = ArrayTerm;
-  const factory map(SplayTreeMap<MapKey, Term> value) = MapTerm;
+  const factory variable(String value) = Variable;
+  const factory int(int value) = Int;
+  const factory str(String value) = Str;
+  factory date(DateTime value) = Date;
+  const factory bytes(Uint8List value) = Bytes;
+  const factory bool(bool value) = Bool;
+  const factory set(SplayTreeSet<Term> value) = Set;
+  const factory parameter(String value) = Parameter;
+  const factory nil() = Nil;
+  const factory array(List<Term> value) = Array;
+  const factory map(SplayTreeMap<MapKey, Term> value) = Map;
 
   void extractParameters(HashMap<String, Term?> parameters) {
     switch (this) {
-      case ParameterTerm(:final value):
+      case Parameter(:final value):
         parameters[value] = null;
 
-      case SetTerm(:final value):
+      case Set(:final value):
         for (final item in value) {
           item.extractParameters(parameters);
         }
 
-      case ArrayTerm(:final value):
+      case Array(:final value):
         for (final item in value) {
           item.extractParameters(parameters);
         }
 
-      case MapTerm(:final value):
+      case Map(:final value):
         for (final MapEntry(:key, value: term) in value.entries) {
-          if (key case ParameterTerm(value: final parameter)) {
+          if (key case Parameter(value: final parameter)) {
             parameters[parameter] = null;
           }
           term.extractParameters(parameters);
@@ -124,21 +124,17 @@ sealed class const Term() extends Op implements Comparable<Term> {
   int compareTo(Term other) {
     if (runtimeType == other.runtimeType) {
       return switch (this) {
-        VariableTerm(:final value) => value.compareTo(
-          (other as VariableTerm).value,
-        ),
-        IntTerm(:final value) => value.compareTo((other as IntTerm).value),
-        StrTerm(:final value) => value.compareTo((other as StrTerm).value),
-        DateTerm(:final value) => value.compareTo((other as DateTerm).value),
-        BytesTerm(:final value) => value.compareTo((other as BytesTerm).value),
-        BoolTerm(:final value) => value.compareTo((other as BoolTerm).value),
-        SetTerm(:final value) => value.compareTo((other as SetTerm).value),
-        ParameterTerm(:final value) => value.compareTo(
-          (other as ParameterTerm).value,
-        ),
-        NilTerm _ => 0,
-        ArrayTerm(:final value) => value.compareTo((other as ArrayTerm).value),
-        MapTerm(:final value) => value.compareTo((other as MapTerm).value),
+        Variable(:final value) => value.compareTo((other as Variable).value),
+        Int(:final value) => value.compareTo((other as Int).value),
+        Str(:final value) => value.compareTo((other as Str).value),
+        Date(:final value) => value.compareTo((other as Date).value),
+        Bytes(:final value) => value.compareTo((other as Bytes).value),
+        Bool(:final value) => value.compareTo((other as Bool).value),
+        Set(:final value) => value.compareTo((other as Set).value),
+        Parameter(:final value) => value.compareTo((other as Parameter).value),
+        Nil _ => 0,
+        Array(:final value) => value.compareTo((other as Array).value),
+        Map(:final value) => value.compareTo((other as Map).value),
       };
     }
 
@@ -146,28 +142,28 @@ sealed class const Term() extends Op implements Comparable<Term> {
   }
 
   int _typeOrder(Term term) => switch (term) {
-    VariableTerm _ => 0,
-    IntTerm _ => 1,
-    StrTerm _ => 2,
-    DateTerm _ => 3,
-    BytesTerm _ => 4,
-    BoolTerm _ => 5,
-    SetTerm _ => 6,
-    ParameterTerm _ => 7,
-    NilTerm _ => 8,
-    ArrayTerm _ => 9,
-    MapTerm _ => 10,
+    Variable _ => 0,
+    Int _ => 1,
+    Str _ => 2,
+    Date _ => 3,
+    Bytes _ => 4,
+    Bool _ => 5,
+    Set _ => 6,
+    Parameter _ => 7,
+    Nil _ => 8,
+    Array _ => 9,
+    Map _ => 10,
   };
 }
 
 sealed class const MapKey() extends Term {
-  const factory parameter(String value) = ParameterTerm;
-  const factory integer(int value) = IntTerm;
-  const factory str(String value) = StrTerm;
+  const factory parameter(String value) = Parameter;
+  const factory integer(int value) = Int;
+  const factory str(String value) = Str;
 }
 
 @boilerplate
-final class const VariableTerm(final String value) extends Term {
+final class const Variable(final String value) extends Term {
   @override
   bool operator ==(Object other) => _equals(other);
 
@@ -179,7 +175,7 @@ final class const VariableTerm(final String value) extends Term {
 }
 
 @boilerplate
-final class const IntTerm(final int value) extends MapKey {
+final class const Int(final int value) extends MapKey {
   @override
   bool operator ==(Object other) => _equals(other);
 
@@ -191,7 +187,7 @@ final class const IntTerm(final int value) extends MapKey {
 }
 
 @boilerplate
-final class const StrTerm(final String value) extends MapKey {
+final class const Str(final String value) extends MapKey {
   @override
   bool operator ==(Object other) => _equals(other);
 
@@ -203,7 +199,7 @@ final class const StrTerm(final String value) extends MapKey {
 }
 
 @boilerplate
-final class DateTerm extends Term {
+final class Date extends Term {
   final int value;
 
   new(DateTime date) : value = date.millisecondsSinceEpoch ~/ 1_000;
@@ -219,7 +215,7 @@ final class DateTerm extends Term {
 }
 
 @boilerplate
-final class const BytesTerm(final Uint8List value) extends Term {
+final class const Bytes(final Uint8List value) extends Term {
   @override
   bool operator ==(Object other) => _equals(other);
 
@@ -231,7 +227,7 @@ final class const BytesTerm(final Uint8List value) extends Term {
 }
 
 @boilerplate
-final class const BoolTerm(final bool value) extends Term {
+final class const Bool(final bool value) extends Term {
   @override
   bool operator ==(Object other) => _equals(other);
 
@@ -243,7 +239,7 @@ final class const BoolTerm(final bool value) extends Term {
 }
 
 @boilerplate
-final class const SetTerm(final SplayTreeSet<Term> value) extends Term {
+final class const Set(final SplayTreeSet<Term> value) extends Term {
   @override
   bool operator ==(Object other) => _equals(other);
 
@@ -255,7 +251,7 @@ final class const SetTerm(final SplayTreeSet<Term> value) extends Term {
 }
 
 @boilerplate
-final class const ParameterTerm(final String value) extends MapKey {
+final class const Parameter(final String value) extends MapKey {
   @override
   bool operator ==(Object other) => _equals(other);
 
@@ -267,13 +263,13 @@ final class const ParameterTerm(final String value) extends MapKey {
 }
 
 @boilerplate
-final class const NilTerm() extends Term {
+final class const Nil() extends Term {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const ArrayTerm(final List<Term> value) extends Term {
+final class const Array(final List<Term> value) extends Term {
   @override
   bool operator ==(Object other) => _equals(other);
 
@@ -285,7 +281,7 @@ final class const ArrayTerm(final List<Term> value) extends Term {
 }
 
 @boilerplate
-final class const MapTerm(final SplayTreeMap<MapKey, Term> value) extends Term {
+final class const Map(final SplayTreeMap<MapKey, Term> value) extends Term {
   @override
   bool operator ==(Object other) => _equals(other);
 
@@ -296,7 +292,7 @@ final class const MapTerm(final SplayTreeMap<MapKey, Term> value) extends Term {
   String toString() => _toString();
 }
 
-sealed class const UnaryOp() extends Op {
+sealed class const Unary() extends Op {
   const factory negate() = Negate;
   const factory parens() = Parens;
   const factory length() = Length;
@@ -305,31 +301,31 @@ sealed class const UnaryOp() extends Op {
 }
 
 @boilerplate
-final class const Negate() extends UnaryOp {
+final class const Negate() extends Unary {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const Parens() extends UnaryOp {
+final class const Parens() extends Unary {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const Length() extends UnaryOp {
+final class const Length() extends Unary {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const Type() extends UnaryOp {
+final class const Type() extends Unary {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const UnFfi(final String name) extends UnaryOp {
+final class const UnFfi(final String name) extends Unary {
   @override
   bool operator ==(Object other) => _equals(other);
 
@@ -340,7 +336,7 @@ final class const UnFfi(final String name) extends UnaryOp {
   String toString() => _toString();
 }
 
-sealed class const BinaryOp() extends Op {
+sealed class const Binary() extends Op {
   const factory lessThan() = LessThan;
   const factory greaterThan() = GreaterThan;
   const factory lessOrEqual() = LessOrEqual;
@@ -374,181 +370,181 @@ sealed class const BinaryOp() extends Op {
 }
 
 @boilerplate
-final class const LessThan() extends BinaryOp {
+final class const LessThan() extends Binary {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const GreaterThan() extends BinaryOp {
+final class const GreaterThan() extends Binary {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const LessOrEqual() extends BinaryOp {
+final class const LessOrEqual() extends Binary {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const GreaterOrEqual() extends BinaryOp {
+final class const GreaterOrEqual() extends Binary {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const Equal() extends BinaryOp {
+final class const Equal() extends Binary {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const Contains() extends BinaryOp {
+final class const Contains() extends Binary {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const Prefix() extends BinaryOp {
+final class const Prefix() extends Binary {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const Suffix() extends BinaryOp {
+final class const Suffix() extends Binary {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const Regex() extends BinaryOp {
+final class const Regex() extends Binary {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const Add() extends BinaryOp {
+final class const Add() extends Binary {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const Sub() extends BinaryOp {
+final class const Sub() extends Binary {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const Mul() extends BinaryOp {
+final class const Mul() extends Binary {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const Div() extends BinaryOp {
+final class const Div() extends Binary {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const And() extends BinaryOp {
+final class const And() extends Binary {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const Or() extends BinaryOp {
+final class const Or() extends Binary {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const Intersection() extends BinaryOp {
+final class const Intersection() extends Binary {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const Union() extends BinaryOp {
+final class const Union() extends Binary {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const BitwiseAnd() extends BinaryOp {
+final class const BitwiseAnd() extends Binary {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const BitwiseOr() extends BinaryOp {
+final class const BitwiseOr() extends Binary {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const BitwiseXor() extends BinaryOp {
+final class const BitwiseXor() extends Binary {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const NotEqual() extends BinaryOp {
+final class const NotEqual() extends Binary {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const HeterogeneousEqual() extends BinaryOp {
+final class const HeterogeneousEqual() extends Binary {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const HeterogeneousNotEqual() extends BinaryOp {
+final class const HeterogeneousNotEqual() extends Binary {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const LazyAnd() extends BinaryOp {
+final class const LazyAnd() extends Binary {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const LazyOr() extends BinaryOp {
+final class const LazyOr() extends Binary {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const All() extends BinaryOp {
+final class const All() extends Binary {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const Any() extends BinaryOp {
+final class const Any() extends Binary {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const Get() extends BinaryOp {
+final class const Get() extends Binary {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const TryOr() extends BinaryOp {
+final class const TryOr() extends Binary {
   @override
   String toString() => _toString();
 }
 
 @boilerplate
-final class const BinFfi(final String name) extends BinaryOp {
+final class const BinFfi(final String name) extends Binary {
   @override
   bool operator ==(Object other) => _equals(other);
 
@@ -560,7 +556,7 @@ final class const BinFfi(final String name) extends BinaryOp {
 }
 
 @boilerplate
-final class const ClosureOp({
+final class const Closure({
   required final List<String> params,
   required final List<Op> ops,
 }) extends Op {

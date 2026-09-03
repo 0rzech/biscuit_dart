@@ -127,7 +127,7 @@ bool containsV33Op(List<Expression> expressions) => expressions.any(
   (expression) => expression.ops.any(
     (op) => switch (op) {
       final Term term => isV33Term(term),
-      ClosureOp _ ||
+      Closure _ ||
       Type _ ||
       UnFfi _ ||
       HeterogeneousEqual _ ||
@@ -145,7 +145,7 @@ bool containsV33Op(List<Expression> expressions) => expressions.any(
 bool isV33Predicate(Predicate predicate) => predicate.terms.any(isV33Term);
 
 bool isV33Term(Term term) => switch (term) {
-  NilTerm _ => true,
-  final SetTerm s => s.value.contains(const Term.nil()),
+  Nil _ => true,
+  final Set s => s.value.contains(const Term.nil()),
   _ => false,
 };

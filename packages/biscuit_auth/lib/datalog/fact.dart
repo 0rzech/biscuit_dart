@@ -55,17 +55,17 @@ bool areMatching({required Predicate rule, required Predicate fact}) =>
     IterableZip([rule.terms, fact.terms]).every(
       (pair) => switch (pair) {
         // the fact should not contain variables
-        [final _, final VariableTerm _] => false,
-        [final VariableTerm _, final _] => true,
-        [final IntTerm l, final IntTerm r] => l == r,
-        [final StrTerm l, final StrTerm r] => l == r,
-        [final DateTerm l, final DateTerm r] => l == r,
-        [final BytesTerm l, final BytesTerm r] => l == r,
-        [final BoolTerm l, final BoolTerm r] => l == r,
-        [final NilTerm _, final NilTerm _] => true,
-        [final SetTerm l, final SetTerm r] => l == r,
-        [final ArrayTerm l, final ArrayTerm r] => l == r,
-        [final MapTerm l, final MapTerm r] => l == r,
+        [final _, final Variable _] => false,
+        [final Variable _, final _] => true,
+        [final Int l, final Int r] => l == r,
+        [final Str l, final Str r] => l == r,
+        [final Date l, final Date r] => l == r,
+        [final Bytes l, final Bytes r] => l == r,
+        [final Bool l, final Bool r] => l == r,
+        [final Nil _, final Nil _] => true,
+        [final Set l, final Set r] => l == r,
+        [final Array l, final Array r] => l == r,
+        [final Map l, final Map r] => l == r,
         _ => false,
       },
     );

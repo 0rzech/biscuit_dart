@@ -42,17 +42,16 @@ void main() {
       final symbols = SymbolTable();
       final tmpSymbols = TemporarySymbolTable(symbols);
 
-      for (final (op, val1, val2, expected)
-          in const <(BinaryOp, int, int, int)>[
-            (.bitwiseAnd(), 9, 10, 8),
-            (.bitwiseAnd(), 9, 1, 1),
-            (.bitwiseAnd(), 9, 0, 0),
-            (.bitwiseOr(), 1, 2, 3),
-            (.bitwiseOr(), 2, 2, 2),
-            (.bitwiseOr(), 2, 0, 2),
-            (.bitwiseXor(), 1, 0, 1),
-            (.bitwiseXor(), 1, 1, 0),
-          ]) {
+      for (final (op, val1, val2, expected) in const <(Binary, int, int, int)>[
+        (.bitwiseAnd(), 9, 10, 8),
+        (.bitwiseAnd(), 9, 1, 1),
+        (.bitwiseAnd(), 9, 0, 0),
+        (.bitwiseOr(), 1, 2, 3),
+        (.bitwiseOr(), 2, 2, 2),
+        (.bitwiseOr(), 2, 0, 2),
+        (.bitwiseXor(), 1, 0, 1),
+        (.bitwiseXor(), 1, 1, 0),
+      ]) {
         final ops = <Op>[.int(val1), .int(val2), op];
 
         printOnFailure('\nops: $ops');
@@ -886,11 +885,11 @@ void main() {
 
       externFunctions['test_bin'] = ExternFn(({required left, right}) {
         switch ((left, right)) {
-          case (b.IntTerm(value: final l), b.IntTerm(value: final r)):
+          case (b.Int(value: final l), b.Int(value: final r)):
             printOnFailure('$l $r');
             return .bool((l % 60) == (r % 60));
 
-          case (b.StrTerm(value: final l), b.StrTerm(value: final r)):
+          case (b.Str(value: final l), b.Str(value: final r)):
             printOnFailure('$l $r');
             return .bool(l.toLowerCase() == r.toLowerCase());
 
@@ -901,7 +900,7 @@ void main() {
 
       externFunctions['test_un'] = ExternFn(({required left, right}) {
         switch ((left, right)) {
-          case (b.IntTerm(:final value), null):
+          case (b.Int(:final value), null):
             return .bool(value == 42);
 
           default:
@@ -916,10 +915,10 @@ void main() {
 
       externFunctions['test_closure'] = ExternFn(({required left, right}) {
         switch ((left, right)) {
-          case (b.IntTerm(:final value), null):
+          case (b.Int(:final value), null):
             return .bool(value == 42);
 
-          case (b.StrTerm(:final value), null):
+          case (b.Str(:final value), null):
             return .bool(value == 'test');
 
           default:

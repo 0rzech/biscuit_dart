@@ -83,7 +83,7 @@ final class _Combinator implements Iterator<(Origin, HashMap<SymbolId, Term>)> {
               pred.terms,
               currentFact.predicate.terms,
             ])) {
-              if (key case VariableTerm(id: final k)) {
+              if (key case Variable(id: final k)) {
                 if (!vars.insert(k, id)) {
                   matchTerms = false;
                   break;

@@ -58,7 +58,7 @@ final class const Expression(final List<Op> ops) {
         // value
 
         case final Term term:
-          if (term case VariableTerm(:final id)) {
+          if (term case Variable(:final id)) {
             if (values[id] case final value?) {
               stack.add(value);
             } else {
@@ -70,7 +70,7 @@ final class const Expression(final List<Op> ops) {
 
         // unary
 
-        case final UnaryOp _:
+        case final Unary _:
           if (stack.isEmpty) throw const ExecutionError.invalidStack();
 
           if (stack.removeLast() case final Term t) {
@@ -81,15 +81,15 @@ final class const Expression(final List<Op> ops) {
 
         // binary
 
-        case final BinaryOp _:
+        case final Binary _:
           if (stack.length < 2) throw const ExecutionError.invalidStack();
 
           switch ((stack.removeLast(), stack.removeLast())) {
             case (final Term r, final Term l):
               stack.add(op.eval(l, r, symbols, externFunctions));
 
-            case (ClosureOp(:final params, :final ops), final Term t):
-            case (final Term t, ClosureOp(:final params, :final ops)):
+            case (Closure(:final params, :final ops), final Term t):
+            case (final Term t, Closure(:final params, :final ops)):
               if (params.any(values.containsKey)) {
                 throw const ExecutionError.shadowedVariable();
               }
@@ -111,7 +111,7 @@ final class const Expression(final List<Op> ops) {
 
         // closure
 
-        case final ClosureOp c:
+        case final Closure c:
           stack.add(c);
       }
     }
@@ -134,18 +134,18 @@ final class const Expression(final List<Op> ops) {
         case final Term term:
           stack.add(term.stringify(symbols));
 
-        case UnaryOp _:
+        case Unary _:
           if (stack.isEmpty) return null;
 
           stack.add(op.stringify(stack.removeLast(), symbols));
 
-        case BinaryOp _:
+        case Binary _:
           if (stack.length < 2) return null;
 
           final (right, left) = (stack.removeLast(), stack.removeLast());
           stack.add(op.stringify(left, right, symbols));
 
-        case ClosureOp(:final params, :final ops):
+        case Closure(:final params, :final ops):
           final body = Expression(ops).stringify(symbols);
           if (body == null) return null;
 

@@ -11,8 +11,8 @@ part 'gen/expression.bp.dart';
 @immutable
 sealed class const Expr() {
   const factory value(Term term) = ValueExpr;
-  const factory unary(UnaryOp op, Expr expr) = UnaryExpr;
-  const factory binary(BinaryOp op, Expr left, Expr right) = BinaryExpr;
+  const factory unary(Unary op, Expr expr) = UnaryExpr;
+  const factory binary(Binary op, Expr left, Expr right) = BinaryExpr;
   const factory closure(List<String> params, Expr expr) = ClosureExpr;
 
   bool get isComparison => false;
@@ -45,7 +45,7 @@ final class const ValueExpr(final Term term) extends Expr {
 }
 
 @boilerplate
-final class const UnaryExpr(final UnaryOp op, final Expr expr) extends Expr {
+final class const UnaryExpr(final Unary op, final Expr expr) extends Expr {
   @override
   String? validate() => expr.validate();
 
@@ -66,11 +66,8 @@ final class const UnaryExpr(final UnaryOp op, final Expr expr) extends Expr {
 }
 
 @boilerplate
-final class const BinaryExpr(
-  final BinaryOp op,
-  final Expr left,
-  final Expr right,
-) extends Expr {
+final class const BinaryExpr(final Binary op, final Expr left, final Expr right)
+    extends Expr {
   @override
   bool get isComparison => switch (op) {
     const .lessOrEqual() ||

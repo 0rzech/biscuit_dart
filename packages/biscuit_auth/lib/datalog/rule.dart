@@ -41,7 +41,7 @@ final class const Rule._(
   HashSet<SymbolId> variablesSet() {
     final result = HashSet<SymbolId>();
     for (final predicate in body) {
-      for (final term in predicate.terms.whereType<VariableTerm>()) {
+      for (final term in predicate.terms.whereType<Variable>()) {
         result.add(term.id);
       }
     }
@@ -66,9 +66,9 @@ final class const Rule._(
 
           for (final e in expressions) {
             switch (e.eval(variables, temporarySymbols, externFunctions)) {
-              case BoolTerm(value: true):
+              case Bool(value: true):
                 break;
-              case BoolTerm(value: false):
+              case Bool(value: false):
                 return (origin, variables, false);
               default:
                 throw const ExecutionError.invalidType();
@@ -84,7 +84,7 @@ final class const Rule._(
             final p = head.copyWith(terms: [...head.terms]);
 
             for (var i = 0; i < p.terms.length; ++i) {
-              if (p.terms[i] case VariableTerm(:final id)) {
+              if (p.terms[i] case Variable(:final id)) {
                 if (map[id] case final term?) {
                   p.terms[i] = term;
                 } else {

@@ -26,60 +26,60 @@ sealed class const Op() {
   const factory array(List<Term> value) = Term.array;
   const factory map(SplayTreeMap<MapKey, Term> value) = Term.map;
 
-  const factory negate() = UnaryOp.negate;
-  const factory parens() = UnaryOp.parens;
-  const factory length() = UnaryOp.length;
-  const factory type() = UnaryOp.type;
-  const factory unFfi(SymbolId name) = UnaryOp.ffi;
+  const factory negate() = Unary.negate;
+  const factory parens() = Unary.parens;
+  const factory length() = Unary.length;
+  const factory type() = Unary.type;
+  const factory unFfi(SymbolId name) = Unary.ffi;
 
-  const factory lessThan() = BinaryOp.lessThan;
-  const factory greaterThan() = BinaryOp.greaterThan;
-  const factory lessOrEqual() = BinaryOp.lessOrEqual;
-  const factory greaterOrEqual() = BinaryOp.greaterOrEqual;
-  const factory equal() = BinaryOp.equal;
-  const factory contains() = BinaryOp.contains;
-  const factory prefix() = BinaryOp.prefix;
-  const factory suffix() = BinaryOp.suffix;
-  const factory regex() = BinaryOp.regex;
-  const factory add() = BinaryOp.add;
-  const factory sub() = BinaryOp.sub;
-  const factory mul() = BinaryOp.mul;
-  const factory div() = BinaryOp.div;
-  const factory and() = BinaryOp.and;
-  const factory or() = BinaryOp.or;
-  const factory intersection() = BinaryOp.intersection;
-  const factory union() = BinaryOp.union;
-  const factory bitwiseAnd() = BinaryOp.bitwiseAnd;
-  const factory bitwiseOr() = BinaryOp.bitwiseOr;
-  const factory bitwiseXor() = BinaryOp.bitwiseXor;
-  const factory notEqual() = BinaryOp.notEqual;
-  const factory heterogeneousEqual() = BinaryOp.heterogeneousEqual;
-  const factory heterogeneousNotEqual() = BinaryOp.heterogeneousNotEqual;
-  const factory lazyAnd() = BinaryOp.lazyAnd;
-  const factory lazyOr() = BinaryOp.lazyOr;
-  const factory all() = BinaryOp.all;
-  const factory any() = BinaryOp.any;
-  const factory get() = BinaryOp.get;
-  const factory tryOr() = BinaryOp.tryOr;
-  const factory binFfi(SymbolId id) = BinaryOp.ffi;
+  const factory lessThan() = Binary.lessThan;
+  const factory greaterThan() = Binary.greaterThan;
+  const factory lessOrEqual() = Binary.lessOrEqual;
+  const factory greaterOrEqual() = Binary.greaterOrEqual;
+  const factory equal() = Binary.equal;
+  const factory contains() = Binary.contains;
+  const factory prefix() = Binary.prefix;
+  const factory suffix() = Binary.suffix;
+  const factory regex() = Binary.regex;
+  const factory add() = Binary.add;
+  const factory sub() = Binary.sub;
+  const factory mul() = Binary.mul;
+  const factory div() = Binary.div;
+  const factory and() = Binary.and;
+  const factory or() = Binary.or;
+  const factory intersection() = Binary.intersection;
+  const factory union() = Binary.union;
+  const factory bitwiseAnd() = Binary.bitwiseAnd;
+  const factory bitwiseOr() = Binary.bitwiseOr;
+  const factory bitwiseXor() = Binary.bitwiseXor;
+  const factory notEqual() = Binary.notEqual;
+  const factory heterogeneousEqual() = Binary.heterogeneousEqual;
+  const factory heterogeneousNotEqual() = Binary.heterogeneousNotEqual;
+  const factory lazyAnd() = Binary.lazyAnd;
+  const factory lazyOr() = Binary.lazyOr;
+  const factory all() = Binary.all;
+  const factory any() = Binary.any;
+  const factory get() = Binary.get;
+  const factory tryOr() = Binary.tryOr;
+  const factory binFfi(SymbolId id) = Binary.ffi;
 
   const factory closure({
     required List<SymbolId> params,
     required List<Op> ops,
-  }) = ClosureOp;
+  }) = Closure;
 }
 
 sealed class const Term() extends Op implements Comparable<Term> {
-  const factory variable(SymbolId id) = VariableTerm;
-  const factory int(int value) = IntTerm;
-  const factory str(SymbolId value) = StrTerm;
-  factory date(DateTime value) = DateTerm;
-  const factory bytes(Uint8List value) = BytesTerm;
-  const factory bool(bool value) = BoolTerm;
-  const factory set(SplayTreeSet<Term> value) = SetTerm;
-  const factory nil() = NilTerm;
-  const factory array(List<Term> value) = ArrayTerm;
-  const factory map(SplayTreeMap<MapKey, Term> value) = MapTerm;
+  const factory variable(SymbolId id) = Variable;
+  const factory int(int value) = Int;
+  const factory str(SymbolId value) = Str;
+  factory date(DateTime value) = Date;
+  const factory bytes(Uint8List value) = Bytes;
+  const factory bool(bool value) = Bool;
+  const factory set(SplayTreeSet<Term> value) = Set;
+  const factory nil() = Nil;
+  const factory array(List<Term> value) = Array;
+  const factory map(SplayTreeMap<MapKey, Term> value) = Map;
 
   String stringify(SymbolTable symbols);
 
@@ -87,18 +87,16 @@ sealed class const Term() extends Op implements Comparable<Term> {
   int compareTo(Term other) {
     if (runtimeType == other.runtimeType) {
       return switch (this) {
-        VariableTerm(:final id) => id.value.compareTo(
-          (other as VariableTerm).id.value,
-        ),
-        IntTerm(:final value) => value.compareTo((other as IntTerm).value),
-        StrTerm(:final id) => id.value.compareTo((other as StrTerm).id.value),
-        DateTerm(:final value) => value.compareTo((other as DateTerm).value),
-        BytesTerm(:final value) => value.compareTo((other as BytesTerm).value),
-        BoolTerm(:final value) => value.compareTo((other as BoolTerm).value),
-        SetTerm(:final value) => value.compareTo((other as SetTerm).value),
-        NilTerm _ => 0,
-        ArrayTerm(:final value) => value.compareTo((other as ArrayTerm).value),
-        MapTerm(:final value) => value.compareTo((other as MapTerm).value),
+        Variable(:final id) => id.value.compareTo((other as Variable).id.value),
+        Int(:final value) => value.compareTo((other as Int).value),
+        Str(:final id) => id.value.compareTo((other as Str).id.value),
+        Date(:final value) => value.compareTo((other as Date).value),
+        Bytes(:final value) => value.compareTo((other as Bytes).value),
+        Bool(:final value) => value.compareTo((other as Bool).value),
+        Set(:final value) => value.compareTo((other as Set).value),
+        Nil _ => 0,
+        Array(:final value) => value.compareTo((other as Array).value),
+        Map(:final value) => value.compareTo((other as Map).value),
       };
     }
 
@@ -106,21 +104,21 @@ sealed class const Term() extends Op implements Comparable<Term> {
   }
 
   int _typeOrder(Term term) => switch (term) {
-    VariableTerm _ => 0,
-    IntTerm _ => 1,
-    StrTerm _ => 2,
-    DateTerm _ => 3,
-    BytesTerm _ => 4,
-    BoolTerm _ => 5,
-    SetTerm _ => 6,
-    NilTerm _ => 7,
-    ArrayTerm _ => 8,
-    MapTerm _ => 9,
+    Variable _ => 0,
+    Int _ => 1,
+    Str _ => 2,
+    Date _ => 3,
+    Bytes _ => 4,
+    Bool _ => 5,
+    Set _ => 6,
+    Nil _ => 7,
+    Array _ => 8,
+    Map _ => 9,
   };
 }
 
 @boilerplate
-final class const VariableTerm(final SymbolId id) extends Term {
+final class const Variable(final SymbolId id) extends Term {
   @override
   String stringify(SymbolTable symbols) => '\$${symbols.getOrDefault(id)}';
 
@@ -135,12 +133,12 @@ final class const VariableTerm(final SymbolId id) extends Term {
 }
 
 sealed class const MapKey() extends Term {
-  const factory int(int value) = IntTerm;
-  const factory str(SymbolId id) = StrTerm;
+  const factory int(int value) = Int;
+  const factory str(SymbolId id) = Str;
 }
 
 @boilerplate
-final class const IntTerm(final int value) extends MapKey {
+final class const Int(final int value) extends MapKey {
   this
     : assert(
         value >= minValue && value <= maxValue,
@@ -169,7 +167,7 @@ final class const IntTerm(final int value) extends MapKey {
 }
 
 @boilerplate
-final class const StrTerm(final SymbolId id) extends MapKey {
+final class const Str(final SymbolId id) extends MapKey {
   @override
   String stringify(SymbolTable symbols) => symbols.getOrDefault(id);
 
@@ -184,7 +182,7 @@ final class const StrTerm(final SymbolId id) extends MapKey {
 }
 
 @boilerplate
-final class DateTerm extends Term {
+final class Date extends Term {
   final int value;
 
   new(DateTime date) : value = date.toUtc().millisecondsSinceEpoch ~/ 1000;
@@ -204,7 +202,7 @@ final class DateTerm extends Term {
 }
 
 @boilerplate
-final class const BytesTerm(final Uint8List value) extends Term {
+final class const Bytes(final Uint8List value) extends Term {
   @override
   String stringify(SymbolTable _) => uint8ListToBytesStr(value, prefix: 'hex:');
 
@@ -219,8 +217,8 @@ final class const BytesTerm(final Uint8List value) extends Term {
 }
 
 @boilerplate
-final class const BoolTerm(final bool value) extends Term {
-  BoolTerm get negate => .new(!value);
+final class const Bool(final bool value) extends Term {
+  Bool get negate => .new(!value);
 
   @override
   String stringify(SymbolTable _) => value.toString();
@@ -236,7 +234,7 @@ final class const BoolTerm(final bool value) extends Term {
 }
 
 @boilerplate
-final class const SetTerm(final SplayTreeSet<Term> value) extends Term {
+final class const Set(final SplayTreeSet<Term> value) extends Term {
   @override
   String stringify(SymbolTable symbols) => value.isEmpty
       ? '{,}'
@@ -253,7 +251,7 @@ final class const SetTerm(final SplayTreeSet<Term> value) extends Term {
 }
 
 @boilerplate
-final class const NilTerm() extends Term {
+final class const Nil() extends Term {
   @override
   String stringify(SymbolTable _) => 'null';
 
@@ -262,7 +260,7 @@ final class const NilTerm() extends Term {
 }
 
 @boilerplate
-final class const ArrayTerm(final List<Term> value) extends Term {
+final class const Array(final List<Term> value) extends Term {
   @override
   String stringify(SymbolTable symbols) =>
       '{${value.map((term) => term.stringify(symbols)).join(', ')}}';
@@ -278,12 +276,12 @@ final class const ArrayTerm(final List<Term> value) extends Term {
 }
 
 @boilerplate
-final class const MapTerm(final SplayTreeMap<MapKey, Term> value) extends Term {
+final class const Map(final SplayTreeMap<MapKey, Term> value) extends Term {
   @override
   String stringify(SymbolTable symbols) =>
       '{${value.entries.map((entry) => switch (entry.key) {
-        IntTerm(:final value) => '$value: ${entry.value.stringify(symbols)}',
-        StrTerm(:final id) => '"${symbols.getOrDefault(id)}": '
+        Int(:final value) => '$value: ${entry.value.stringify(symbols)}',
+        Str(:final id) => '"${symbols.getOrDefault(id)}": '
             '${entry.value.stringify(symbols)}',
       }).join(', ')}}';
 
@@ -297,7 +295,7 @@ final class const MapTerm(final SplayTreeMap<MapKey, Term> value) extends Term {
   String toString() => _toString();
 }
 
-sealed class const UnaryOp() extends Op {
+sealed class const Unary() extends Op {
   const factory negate() = Negate;
   const factory parens() = Parens;
   const factory length() = Length;
@@ -308,7 +306,7 @@ sealed class const UnaryOp() extends Op {
 }
 
 @boilerplate
-final class const Negate() extends UnaryOp {
+final class const Negate() extends Unary {
   @override
   String stringify(String symbol, SymbolTable _) => '!$symbol';
 
@@ -317,7 +315,7 @@ final class const Negate() extends UnaryOp {
 }
 
 @boilerplate
-final class const Parens() extends UnaryOp {
+final class const Parens() extends Unary {
   @override
   String stringify(String symbol, SymbolTable _) => '($symbol)';
 
@@ -326,7 +324,7 @@ final class const Parens() extends UnaryOp {
 }
 
 @boilerplate
-final class const Length() extends UnaryOp {
+final class const Length() extends Unary {
   @override
   String stringify(String symbol, SymbolTable _) => '$symbol.length()';
 
@@ -335,7 +333,7 @@ final class const Length() extends UnaryOp {
 }
 
 @boilerplate
-final class const Type() extends UnaryOp {
+final class const Type() extends Unary {
   @override
   String stringify(String symbol, SymbolTable _) => '$symbol.type()';
 
@@ -344,7 +342,7 @@ final class const Type() extends UnaryOp {
 }
 
 @boilerplate
-final class const UnFfi(final SymbolId id) extends UnaryOp {
+final class const UnFfi(final SymbolId id) extends Unary {
   @override
   String stringify(String symbol, SymbolTable symbols) =>
       '$symbol.extern::${symbols.getOrDefault(id)}()';
@@ -359,7 +357,7 @@ final class const UnFfi(final SymbolId id) extends UnaryOp {
   String toString() => _toString();
 }
 
-sealed class const BinaryOp() extends Op {
+sealed class const Binary() extends Op {
   const factory lessThan() = LessThan;
   const factory greaterThan() = GreaterThan;
   const factory lessOrEqual() = LessOrEqual;
@@ -395,7 +393,7 @@ sealed class const BinaryOp() extends Op {
 }
 
 @boilerplate
-final class const LessThan() extends BinaryOp {
+final class const LessThan() extends Binary {
   @override
   String stringify(String left, String right, SymbolTable _) =>
       '$left < $right';
@@ -405,7 +403,7 @@ final class const LessThan() extends BinaryOp {
 }
 
 @boilerplate
-final class const GreaterThan() extends BinaryOp {
+final class const GreaterThan() extends Binary {
   @override
   String stringify(String left, String right, SymbolTable _) =>
       '$left > $right';
@@ -415,7 +413,7 @@ final class const GreaterThan() extends BinaryOp {
 }
 
 @boilerplate
-final class const LessOrEqual() extends BinaryOp {
+final class const LessOrEqual() extends Binary {
   @override
   String stringify(String left, String right, SymbolTable _) =>
       '$left <= $right';
@@ -425,7 +423,7 @@ final class const LessOrEqual() extends BinaryOp {
 }
 
 @boilerplate
-final class const GreaterOrEqual() extends BinaryOp {
+final class const GreaterOrEqual() extends Binary {
   @override
   String stringify(String left, String right, SymbolTable _) =>
       '$left >= $right';
@@ -435,7 +433,7 @@ final class const GreaterOrEqual() extends BinaryOp {
 }
 
 @boilerplate
-final class const Equal() extends BinaryOp {
+final class const Equal() extends Binary {
   @override
   String stringify(String left, String right, SymbolTable _) =>
       '$left === $right';
@@ -445,7 +443,7 @@ final class const Equal() extends BinaryOp {
 }
 
 @boilerplate
-final class const Contains() extends BinaryOp {
+final class const Contains() extends Binary {
   @override
   String stringify(String left, String right, SymbolTable _) =>
       '$left.contains($right)';
@@ -455,7 +453,7 @@ final class const Contains() extends BinaryOp {
 }
 
 @boilerplate
-final class const Prefix() extends BinaryOp {
+final class const Prefix() extends Binary {
   @override
   String stringify(String left, String right, SymbolTable _) =>
       '$left.starts_with($right)';
@@ -465,7 +463,7 @@ final class const Prefix() extends BinaryOp {
 }
 
 @boilerplate
-final class const Suffix() extends BinaryOp {
+final class const Suffix() extends Binary {
   @override
   String stringify(String left, String right, SymbolTable _) =>
       '$left.ends_with($right)';
@@ -475,7 +473,7 @@ final class const Suffix() extends BinaryOp {
 }
 
 @boilerplate
-final class const Regex() extends BinaryOp {
+final class const Regex() extends Binary {
   @override
   String stringify(String left, String right, SymbolTable _) =>
       '$left.matches($right)';
@@ -485,7 +483,7 @@ final class const Regex() extends BinaryOp {
 }
 
 @boilerplate
-final class const Add() extends BinaryOp {
+final class const Add() extends Binary {
   @override
   String stringify(String left, String right, SymbolTable _) =>
       '$left + $right';
@@ -495,7 +493,7 @@ final class const Add() extends BinaryOp {
 }
 
 @boilerplate
-final class const Sub() extends BinaryOp {
+final class const Sub() extends Binary {
   @override
   String stringify(String left, String right, SymbolTable _) =>
       '$left - $right';
@@ -505,7 +503,7 @@ final class const Sub() extends BinaryOp {
 }
 
 @boilerplate
-final class const Mul() extends BinaryOp {
+final class const Mul() extends Binary {
   @override
   String stringify(String left, String right, SymbolTable _) =>
       '$left * $right';
@@ -515,7 +513,7 @@ final class const Mul() extends BinaryOp {
 }
 
 @boilerplate
-final class const Div() extends BinaryOp {
+final class const Div() extends Binary {
   @override
   String stringify(String left, String right, SymbolTable _) =>
       '$left / $right';
@@ -525,7 +523,7 @@ final class const Div() extends BinaryOp {
 }
 
 @boilerplate
-final class const And() extends BinaryOp {
+final class const And() extends Binary {
   @override
   String stringify(String left, String right, SymbolTable _) =>
       '$left &&! $right';
@@ -535,7 +533,7 @@ final class const And() extends BinaryOp {
 }
 
 @boilerplate
-final class const Or() extends BinaryOp {
+final class const Or() extends Binary {
   @override
   String stringify(String left, String right, SymbolTable _) =>
       '$left ||! $right';
@@ -545,7 +543,7 @@ final class const Or() extends BinaryOp {
 }
 
 @boilerplate
-final class const Intersection() extends BinaryOp {
+final class const Intersection() extends Binary {
   @override
   String stringify(String left, String right, SymbolTable _) =>
       '$left.intersection($right)';
@@ -555,7 +553,7 @@ final class const Intersection() extends BinaryOp {
 }
 
 @boilerplate
-final class const Union() extends BinaryOp {
+final class const Union() extends Binary {
   @override
   String stringify(String left, String right, SymbolTable _) =>
       '$left.union($right)';
@@ -565,7 +563,7 @@ final class const Union() extends BinaryOp {
 }
 
 @boilerplate
-final class const BitwiseAnd() extends BinaryOp {
+final class const BitwiseAnd() extends Binary {
   @override
   String stringify(String left, String right, SymbolTable _) =>
       '$left & $right';
@@ -575,7 +573,7 @@ final class const BitwiseAnd() extends BinaryOp {
 }
 
 @boilerplate
-final class const BitwiseOr() extends BinaryOp {
+final class const BitwiseOr() extends Binary {
   @override
   String stringify(String left, String right, SymbolTable _) =>
       '$left | $right';
@@ -585,7 +583,7 @@ final class const BitwiseOr() extends BinaryOp {
 }
 
 @boilerplate
-final class const BitwiseXor() extends BinaryOp {
+final class const BitwiseXor() extends Binary {
   @override
   String stringify(String left, String right, SymbolTable _) =>
       '$left ^ $right';
@@ -595,7 +593,7 @@ final class const BitwiseXor() extends BinaryOp {
 }
 
 @boilerplate
-final class const NotEqual() extends BinaryOp {
+final class const NotEqual() extends Binary {
   @override
   String stringify(String left, String right, SymbolTable _) =>
       '$left !== $right';
@@ -605,7 +603,7 @@ final class const NotEqual() extends BinaryOp {
 }
 
 @boilerplate
-final class const HeterogeneousEqual() extends BinaryOp {
+final class const HeterogeneousEqual() extends Binary {
   @override
   String stringify(String left, String right, SymbolTable _) =>
       '$left == $right';
@@ -615,7 +613,7 @@ final class const HeterogeneousEqual() extends BinaryOp {
 }
 
 @boilerplate
-final class const HeterogeneousNotEqual() extends BinaryOp {
+final class const HeterogeneousNotEqual() extends Binary {
   @override
   String stringify(String left, String right, SymbolTable _) =>
       '$left != $right';
@@ -625,7 +623,7 @@ final class const HeterogeneousNotEqual() extends BinaryOp {
 }
 
 @boilerplate
-final class const LazyAnd() extends BinaryOp {
+final class const LazyAnd() extends Binary {
   @override
   String stringify(String left, String right, SymbolTable _) =>
       '$left && $right';
@@ -635,7 +633,7 @@ final class const LazyAnd() extends BinaryOp {
 }
 
 @boilerplate
-final class const LazyOr() extends BinaryOp {
+final class const LazyOr() extends Binary {
   @override
   String stringify(String left, String right, SymbolTable _) =>
       '$left || $right';
@@ -645,7 +643,7 @@ final class const LazyOr() extends BinaryOp {
 }
 
 @boilerplate
-final class const All() extends BinaryOp {
+final class const All() extends Binary {
   @override
   String stringify(String left, String right, SymbolTable _) =>
       '$left.all($right)';
@@ -655,7 +653,7 @@ final class const All() extends BinaryOp {
 }
 
 @boilerplate
-final class const Any() extends BinaryOp {
+final class const Any() extends Binary {
   @override
   String stringify(String left, String right, SymbolTable _) =>
       '$left.any($right)';
@@ -665,7 +663,7 @@ final class const Any() extends BinaryOp {
 }
 
 @boilerplate
-final class const Get() extends BinaryOp {
+final class const Get() extends Binary {
   @override
   String stringify(String left, String right, SymbolTable _) =>
       '$left.get($right)';
@@ -675,7 +673,7 @@ final class const Get() extends BinaryOp {
 }
 
 @boilerplate
-final class const TryOr() extends BinaryOp {
+final class const TryOr() extends Binary {
   @override
   String stringify(String left, String right, SymbolTable _) =>
       '$left.tryOr($right)';
@@ -685,7 +683,7 @@ final class const TryOr() extends BinaryOp {
 }
 
 @boilerplate
-final class const BinFfi(final SymbolId id) extends BinaryOp {
+final class const BinFfi(final SymbolId id) extends Binary {
   @override
   String stringify(String left, String right, SymbolTable symbols) =>
       '$left.extern::${symbols.getOrDefault(id)}($right)';
@@ -701,7 +699,7 @@ final class const BinFfi(final SymbolId id) extends BinaryOp {
 }
 
 @boilerplate
-final class const ClosureOp({
+final class const Closure({
   required final List<SymbolId> params,
   required final List<Op> ops,
 }) extends Op {

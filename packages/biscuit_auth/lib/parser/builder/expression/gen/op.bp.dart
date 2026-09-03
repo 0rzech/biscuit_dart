@@ -7,109 +7,107 @@ part of '../op.dart';
 // BoilerplateGenerator
 // **************************************************************************
 
-extension $VariableTermExtension on VariableTerm {
+extension $VariableExtension on Variable {
   bool _equals(Object other) =>
-      identical(this, other) || other is VariableTerm && value == other.value;
+      identical(this, other) || other is Variable && value == other.value;
 
-  int get _hashCode => Object.hash('VariableTerm', value);
+  int get _hashCode => Object.hash('Variable', value);
 
-  String _toString() => 'VariableTerm(value: $value)';
+  String _toString() => 'Variable(value: $value)';
 }
 
-extension $IntTermExtension on IntTerm {
+extension $IntExtension on Int {
   bool _equals(Object other) =>
-      identical(this, other) || other is IntTerm && value == other.value;
+      identical(this, other) || other is Int && value == other.value;
 
-  int get _hashCode => Object.hash('IntTerm', value);
+  int get _hashCode => Object.hash('Int', value);
 
-  String _toString() => 'IntTerm(value: $value)';
+  String _toString() => 'Int(value: $value)';
 }
 
-extension $StrTermExtension on StrTerm {
+extension $StrExtension on Str {
   bool _equals(Object other) =>
-      identical(this, other) || other is StrTerm && value == other.value;
+      identical(this, other) || other is Str && value == other.value;
 
-  int get _hashCode => Object.hash('StrTerm', value);
+  int get _hashCode => Object.hash('Str', value);
 
-  String _toString() => 'StrTerm(value: $value)';
+  String _toString() => 'Str(value: $value)';
 }
 
-extension $DateTermExtension on DateTerm {
+extension $DateExtension on Date {
   bool _equals(Object other) =>
-      identical(this, other) || other is DateTerm && value == other.value;
+      identical(this, other) || other is Date && value == other.value;
 
-  int get _hashCode => Object.hash('DateTerm', value);
+  int get _hashCode => Object.hash('Date', value);
 
-  String _toString() => 'DateTerm(value: $value)';
+  String _toString() => 'Date(value: $value)';
 }
 
-extension $BytesTermExtension on BytesTerm {
+extension $BytesExtension on Bytes {
   bool _equals(Object other) =>
       identical(this, other) ||
-      other is BytesTerm &&
-          const ListEquality<int>().equals(value, other.value);
+      other is Bytes && const ListEquality<int>().equals(value, other.value);
 
   int get _hashCode =>
-      Object.hash('BytesTerm', const ListEquality<int>().hash(value));
+      Object.hash('Bytes', const ListEquality<int>().hash(value));
 
-  String _toString() => 'BytesTerm(value: $value)';
+  String _toString() => 'Bytes(value: $value)';
 }
 
-extension $BoolTermExtension on BoolTerm {
+extension $BoolExtension on Bool {
   bool _equals(Object other) =>
-      identical(this, other) || other is BoolTerm && value == other.value;
+      identical(this, other) || other is Bool && value == other.value;
 
-  int get _hashCode => Object.hash('BoolTerm', value);
+  int get _hashCode => Object.hash('Bool', value);
 
-  String _toString() => 'BoolTerm(value: $value)';
+  String _toString() => 'Bool(value: $value)';
 }
 
-extension $SetTermExtension on SetTerm {
+extension $SetExtension on Set {
   bool _equals(Object other) =>
       identical(this, other) ||
-      other is SetTerm && const SetEquality<Term>().equals(value, other.value);
+      other is Set && const SetEquality<Term>().equals(value, other.value);
 
   int get _hashCode =>
-      Object.hash('SetTerm', const SetEquality<Term>().hash(value));
+      Object.hash('Set', const SetEquality<Term>().hash(value));
 
-  String _toString() => 'SetTerm(value: $value)';
+  String _toString() => 'Set(value: $value)';
 }
 
-extension $ParameterTermExtension on ParameterTerm {
+extension $ParameterExtension on Parameter {
   bool _equals(Object other) =>
-      identical(this, other) || other is ParameterTerm && value == other.value;
+      identical(this, other) || other is Parameter && value == other.value;
 
-  int get _hashCode => Object.hash('ParameterTerm', value);
+  int get _hashCode => Object.hash('Parameter', value);
 
-  String _toString() => 'ParameterTerm(value: $value)';
+  String _toString() => 'Parameter(value: $value)';
 }
 
-extension $NilTermExtension on NilTerm {
-  String _toString() => 'NilTerm()';
+extension $NilExtension on Nil {
+  String _toString() => 'Nil()';
 }
 
-extension $ArrayTermExtension on ArrayTerm {
+extension $ArrayExtension on Array {
   bool _equals(Object other) =>
       identical(this, other) ||
-      other is ArrayTerm &&
-          const ListEquality<Term>().equals(value, other.value);
+      other is Array && const ListEquality<Term>().equals(value, other.value);
 
   int get _hashCode =>
-      Object.hash('ArrayTerm', const ListEquality<Term>().hash(value));
+      Object.hash('Array', const ListEquality<Term>().hash(value));
 
-  String _toString() => 'ArrayTerm(value: $value)';
+  String _toString() => 'Array(value: $value)';
 }
 
-extension $MapTermExtension on MapTerm {
+extension $MapExtension on Map {
   bool _equals(Object other) =>
       identical(this, other) ||
-      other is MapTerm &&
+      other is Map &&
           const MapEquality<MapKey, Term>().equals(value, other.value);
 
   int get _hashCode =>
-      Object.hash('MapTerm', const MapEquality<MapKey, Term>().hash(value));
+      Object.hash('Map', const MapEquality<MapKey, Term>().hash(value));
 
-  String _toString() => 'MapTerm(value: $value)';
+  String _toString() => 'Map(value: $value)';
 }
 
 extension $NegateExtension on Negate {
@@ -262,18 +260,18 @@ extension $BinFfiExtension on BinFfi {
   String _toString() => 'BinFfi(name: $name)';
 }
 
-extension $ClosureOpExtension on ClosureOp {
+extension $ClosureExtension on Closure {
   bool _equals(Object other) =>
       identical(this, other) ||
-      other is ClosureOp &&
+      other is Closure &&
           const ListEquality<String>().equals(params, other.params) &&
           const ListEquality<Op>().equals(ops, other.ops);
 
   int get _hashCode => Object.hash(
-    'ClosureOp',
+    'Closure',
     const ListEquality<String>().hash(params),
     const ListEquality<Op>().hash(ops),
   );
 
-  String _toString() => 'ClosureOp(params: $params, ops: $ops)';
+  String _toString() => 'Closure(params: $params, ops: $ops)';
 }

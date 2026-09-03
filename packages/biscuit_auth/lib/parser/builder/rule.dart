@@ -91,14 +91,14 @@ final class const Rule._({
     final freeVariables = HashSet<String>();
 
     for (final term in head.terms) {
-      if (term case VariableTerm(:final value)) {
+      if (term case Variable(:final value)) {
         freeVariables.add(value);
       }
     }
 
     for (final expression in expressions) {
       for (final op in expression.ops) {
-        if (op case VariableTerm(:final value)) {
+        if (op case Variable(:final value)) {
           freeVariables.add(value);
         }
       }
@@ -106,7 +106,7 @@ final class const Rule._({
 
     for (final predicate in body) {
       for (final term in predicate.terms) {
-        if (term case VariableTerm(:final value)) {
+        if (term case Variable(:final value)) {
           freeVariables.remove(value);
           if (freeVariables.isEmpty) {
             return null;
