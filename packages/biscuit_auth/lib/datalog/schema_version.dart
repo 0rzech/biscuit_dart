@@ -7,7 +7,6 @@ import 'package:biscuit_auth/datalog/expression/op.dart';
 import 'package:biscuit_auth/datalog/fact.dart';
 import 'package:biscuit_auth/datalog/rule.dart';
 import 'package:biscuit_auth/datalog/scope.dart';
-import 'package:biscuit_auth/datalog/term.dart';
 import 'package:biscuit_auth/error.dart';
 import 'package:meta/meta.dart';
 
@@ -127,7 +126,7 @@ bool containsV31Op(List<Expression> expressions) => expressions.any(
 bool containsV33Op(List<Expression> expressions) => expressions.any(
   (expression) => expression.ops.any(
     (op) => switch (op) {
-      final ValueOp op => isV33Term(op.term),
+      final Term term => isV33Term(term),
       ClosureOp _ ||
       Type _ ||
       UnFfi _ ||

@@ -3,11 +3,11 @@
 
 import 'dart:collection';
 
+import 'package:biscuit_auth/datalog/expression/op.dart';
 import 'package:biscuit_auth/datalog/fact.dart';
 import 'package:biscuit_auth/datalog/matched_variables.dart';
 import 'package:biscuit_auth/datalog/origin.dart';
 import 'package:biscuit_auth/datalog/symbol.dart';
-import 'package:biscuit_auth/datalog/term.dart';
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
 

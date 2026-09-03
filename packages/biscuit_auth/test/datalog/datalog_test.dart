@@ -241,11 +241,7 @@ void main() {
             ]),
           ],
           expressions: [
-            .new([
-              .value(variable(symbols, 'id')),
-              const .value(.int(1)),
-              const .lessThan(),
-            ]),
+            .new([variable(symbols, 'id'), const .int(1), const .lessThan()]),
           ],
         ),
         origin: ruleOrigin,
@@ -318,8 +314,8 @@ void main() {
               ],
               expressions: [
                 .new([
-                  .value(variable(symbols, 'domain_name')),
-                  .value(symbols.add(suffix)),
+                  variable(symbols, 'domain_name'),
+                  symbols.add(suffix),
                   const .suffix(),
                 ]),
               ],
@@ -385,14 +381,10 @@ void main() {
           .new(x, [variable(symbols, 'date'), variable(symbols, 'val')]),
         ],
         expressions: [
+          .new([variable(symbols, 'date'), .date(t2), const .lessOrEqual()]),
           .new([
-            .value(variable(symbols, 'date')),
-            .value(.date(t2)),
-            const .lessOrEqual(),
-          ]),
-          .new([
-            .value(variable(symbols, 'date')),
-            .value(.date(.fromMillisecondsSinceEpoch(0))),
+            variable(symbols, 'date'),
+            .date(.fromMillisecondsSinceEpoch(0)),
             const .greaterOrEqual(),
           ]),
         ],
@@ -421,14 +413,10 @@ void main() {
           .new(x, [variable(symbols, 'date'), variable(symbols, 'val')]),
         ],
         expressions: [
+          .new([variable(symbols, 'date'), .date(t2), const .greaterOrEqual()]),
           .new([
-            .value(variable(symbols, 'date')),
-            .value(.date(t2)),
-            const .greaterOrEqual(),
-          ]),
-          .new([
-            .value(variable(symbols, 'date')),
-            .value(.date(.fromMillisecondsSinceEpoch(0))),
+            variable(symbols, 'date'),
+            .date(.fromMillisecondsSinceEpoch(0)),
             const .greaterOrEqual(),
           ]),
         ],
@@ -478,8 +466,8 @@ void main() {
           ],
           expressions: [
             .new([
-              .value(.set(.of(const [.int(0), .int(1)]))),
-              .value(variable(symbols, 'int')),
+              .set(.of(const [.int(0), .int(1)])),
+              variable(symbols, 'int'),
               const .contains(),
             ]),
           ],
@@ -513,8 +501,8 @@ void main() {
           ],
           expressions: [
             .new([
-              .value(.set(.of([abc, symbols.add('ghi')]))),
-              .value(variable(symbols, 'symbol')),
+              .set(.of([abc, symbols.add('ghi')])),
+              variable(symbols, 'symbol'),
               const .contains(),
               const .negate(),
             ]),
@@ -549,8 +537,8 @@ void main() {
           ],
           expressions: [
             .new([
-              .value(.set(.of([test, aaa]))),
-              .value(variable(symbols, 'str')),
+              .set(.of([test, aaa])),
+              variable(symbols, 'str'),
               const .contains(),
             ]),
           ],
@@ -637,12 +625,12 @@ void main() {
         ],
         expressions: [
           .new([
-            const .value(.int(5)),
-            const .value(.int(-4)),
+            const .int(5),
+            const .int(-4),
             const .add(),
-            const .value(.int(-1)),
+            const .int(-1),
             const .mul(),
-            .value(variable(symbols, 'nb')),
+            variable(symbols, 'nb'),
             const .lessThan(),
           ]),
         ],

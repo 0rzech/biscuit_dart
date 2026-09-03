@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import 'package:biscuit_auth/parser/builder/expression/op.dart';
-import 'package:biscuit_auth/parser/builder/term.dart';
 import 'package:biscuit_auth/src/boilerplate_gen_annotations.dart';
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
@@ -33,7 +32,7 @@ sealed class const Expr() {
 @boilerplate
 final class const ValueExpr(final Term term) extends Expr {
   @override
-  void addOps(List<Op> ops) => ops.add(.value(term));
+  void addOps(List<Op> ops) => ops.add(term);
 
   @override
   bool operator ==(Object other) => _equals(other);

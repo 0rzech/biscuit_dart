@@ -6,7 +6,6 @@ import 'package:biscuit_auth/parser/builder/expression/op.dart';
 import 'package:biscuit_auth/parser/builder/fact.dart';
 import 'package:biscuit_auth/parser/builder/policy.dart';
 import 'package:biscuit_auth/parser/builder/rule.dart';
-import 'package:biscuit_auth/parser/builder/term.dart';
 import 'package:biscuit_auth/parser/expression.dart';
 import 'package:biscuit_auth/parser/grammar.dart';
 import 'package:kiri_check/kiri_check.dart';
@@ -91,8 +90,8 @@ void main() {
           );
 
           expectSuccess(result, <Op>[
-            .value(.variable(tup.$1)),
-            .value(.date(tup.$2)),
+            .variable(tup.$1),
+            .date(tup.$2),
             const .lessOrEqual(),
           ]);
         });
@@ -105,8 +104,8 @@ void main() {
           );
 
           expectSuccess(result, <Op>[
-            .value(.variable(tup.$1)),
-            .value(.date(tup.$2)),
+            .variable(tup.$1),
+            .date(tup.$2),
             const .greaterOrEqual(),
           ]);
         });
@@ -117,8 +116,8 @@ void main() {
           final result = parser.parse('\$${tup.$1} < ${tup.$2}');
 
           expectSuccess(result, <Op>[
-            .value(.variable(tup.$1)),
-            .value(.int(tup.$2)),
+            .variable(tup.$1),
+            .int(tup.$2),
             const .lessThan(),
           ]);
         });
@@ -129,8 +128,8 @@ void main() {
           final result = parser.parse('\$${tup.$1} > ${tup.$2}');
 
           expectSuccess(result, <Op>[
-            .value(.variable(tup.$1)),
-            .value(.int(tup.$2)),
+            .variable(tup.$1),
+            .int(tup.$2),
             const .greaterThan(),
           ]);
         });
@@ -141,8 +140,8 @@ void main() {
           final result = parser.parse('\$${tup.$1} <= ${tup.$2}');
 
           expectSuccess(result, <Op>[
-            .value(.variable(tup.$1)),
-            .value(.int(tup.$2)),
+            .variable(tup.$1),
+            .int(tup.$2),
             const .lessOrEqual(),
           ]);
         });
@@ -153,8 +152,8 @@ void main() {
           final result = parser.parse('\$${tup.$1} >= ${tup.$2}');
 
           expectSuccess(result, <Op>[
-            .value(.variable(tup.$1)),
-            .value(.int(tup.$2)),
+            .variable(tup.$1),
+            .int(tup.$2),
             const .greaterOrEqual(),
           ]);
         });
@@ -165,8 +164,8 @@ void main() {
           final result = parser.parse('\$${tup.$1} === ${tup.$2}');
 
           expectSuccess(result, <Op>[
-            .value(.variable(tup.$1)),
-            .value(.int(tup.$2)),
+            .variable(tup.$1),
+            .int(tup.$2),
             const .equal(),
           ]);
         });
@@ -177,8 +176,8 @@ void main() {
           final result = parser.parse('\$${tup.$1} == ${tup.$2}');
 
           expectSuccess(result, <Op>[
-            .value(.variable(tup.$1)),
-            .value(.int(tup.$2)),
+            .variable(tup.$1),
+            .int(tup.$2),
             const .heterogeneousEqual(),
           ]);
         });
@@ -189,8 +188,8 @@ void main() {
           final result = parser.parse('\$${tup.$1} !== ${tup.$2}');
 
           expectSuccess(result, <Op>[
-            .value(.variable(tup.$1)),
-            .value(.int(tup.$2)),
+            .variable(tup.$1),
+            .int(tup.$2),
             const .notEqual(),
           ]);
         });
@@ -201,8 +200,8 @@ void main() {
           final result = parser.parse('\$${tup.$1} != ${tup.$2}');
 
           expectSuccess(result, <Op>[
-            .value(.variable(tup.$1)),
-            .value(.int(tup.$2)),
+            .variable(tup.$1),
+            .int(tup.$2),
             const .heterogeneousNotEqual(),
           ]);
         });
@@ -215,9 +214,9 @@ void main() {
             final result = parser.parse('\$${tup.$1}.length() === \$${tup.$2}');
 
             expectSuccess(result, <Op>[
-              .value(.variable(tup.$1)),
+              .variable(tup.$1),
               const .length(),
-              .value(.variable(tup.$2)),
+              .variable(tup.$2),
               const .equal(),
             ]);
           },
@@ -232,9 +231,9 @@ void main() {
           final result = parser.parse('\$${tup.$1}.length() == \$${tup.$2}');
 
           expectSuccess(result, <Op>[
-            .value(.variable(tup.$1)),
+            .variable(tup.$1),
             const .length(),
-            .value(.variable(tup.$2)),
+            .variable(tup.$2),
             const .heterogeneousEqual(),
           ]);
         });
@@ -245,9 +244,9 @@ void main() {
           final result = parser.parse('\$${tup.$1}.length() !== \$${tup.$2}');
 
           expectSuccess(result, <Op>[
-            .value(.variable(tup.$1)),
+            .variable(tup.$1),
             const .length(),
-            .value(.variable(tup.$2)),
+            .variable(tup.$2),
             const .notEqual(),
           ]);
         });
@@ -260,9 +259,9 @@ void main() {
             final result = parser.parse('\$${tup.$1}.length() != \$${tup.$2}');
 
             expectSuccess(result, <Op>[
-              .value(.variable(tup.$1)),
+              .variable(tup.$1),
               const .length(),
-              .value(.variable(tup.$2)),
+              .variable(tup.$2),
               const .heterogeneousNotEqual(),
             ]);
           },
@@ -277,9 +276,9 @@ void main() {
           final result = parser.parse('!\$${tup.$1} === \$${tup.$2}');
 
           expectSuccess(result, <Op>[
-            .value(.variable(tup.$1)),
+            .variable(tup.$1),
             const .negate(),
-            .value(.variable(tup.$2)),
+            .variable(tup.$2),
             const .equal(),
           ]);
         });
@@ -290,9 +289,9 @@ void main() {
           final result = parser.parse('!\$${tup.$1} == \$${tup.$2}');
 
           expectSuccess(result, <Op>[
-            .value(.variable(tup.$1)),
+            .variable(tup.$1),
             const .negate(),
-            .value(.variable(tup.$2)),
+            .variable(tup.$2),
             const .heterogeneousEqual(),
           ]);
         });
@@ -303,9 +302,9 @@ void main() {
           final result = parser.parse('!\$${tup.$1} !== \$${tup.$2}');
 
           expectSuccess(result, <Op>[
-            .value(.variable(tup.$1)),
+            .variable(tup.$1),
             const .negate(),
-            .value(.variable(tup.$2)),
+            .variable(tup.$2),
             const .notEqual(),
           ]);
         });
@@ -316,9 +315,9 @@ void main() {
           final result = parser.parse('!\$${tup.$1} != \$${tup.$2}');
 
           expectSuccess(result, <Op>[
-            .value(.variable(tup.$1)),
+            .variable(tup.$1),
             const .negate(),
-            .value(.variable(tup.$2)),
+            .variable(tup.$2),
             const .heterogeneousNotEqual(),
           ]);
         });
@@ -329,9 +328,9 @@ void main() {
           final result = parser.parse('!${tup.$1} && ${tup.$2}');
 
           expectSuccess(result, <Op>[
-            .value(.bool(tup.$1)),
+            .bool(tup.$1),
             const .negate(),
-            .closure(params: const [], ops: [.value(.bool(tup.$2))]),
+            .closure(params: const [], ops: [.bool(tup.$2)]),
             const .lazyAnd(),
           ]);
         });
@@ -342,12 +341,12 @@ void main() {
           final result = parser.parse('${tup.$1} || ${tup.$2} && ${tup.$3}');
 
           expectSuccess(result, <Op>[
-            .value(.bool(tup.$1)),
+            .bool(tup.$1),
             .closure(
               params: const [],
               ops: [
-                .value(.bool(tup.$2)),
-                .closure(params: const [], ops: [.value(.bool(tup.$3))]),
+                .bool(tup.$2),
+                .closure(params: const [], ops: [.bool(tup.$3)]),
                 const .lazyAnd(),
               ],
             ),
@@ -361,11 +360,11 @@ void main() {
           var result = parser.parse('(${tup.$1} > ${tup.$2}) === ${tup.$3}');
 
           expectSuccess(result, <Op>[
-            .value(.int(tup.$1)),
-            .value(.int(tup.$2)),
+            .int(tup.$1),
+            .int(tup.$2),
             const .greaterThan(),
             const .parens(),
-            .value(.int(tup.$3)),
+            .int(tup.$3),
             const .equal(),
           ]);
 
@@ -381,11 +380,11 @@ void main() {
           var result = parser.parse('(${tup.$1} > ${tup.$2}) == ${tup.$3}');
 
           expectSuccess(result, <Op>[
-            .value(.int(tup.$1)),
-            .value(.int(tup.$2)),
+            .int(tup.$1),
+            .int(tup.$2),
             const .greaterThan(),
             const .parens(),
-            .value(.int(tup.$3)),
+            .int(tup.$3),
             const .heterogeneousEqual(),
           ]);
 
@@ -400,11 +399,11 @@ void main() {
           var result = parser.parse('(${tup.$1} > ${tup.$2}) !== ${tup.$3}');
 
           expectSuccess(result, <Op>[
-            .value(.int(tup.$1)),
-            .value(.int(tup.$2)),
+            .int(tup.$1),
+            .int(tup.$2),
             const .greaterThan(),
             const .parens(),
-            .value(.int(tup.$3)),
+            .int(tup.$3),
             const .notEqual(),
           ]);
 
@@ -420,11 +419,11 @@ void main() {
           var result = parser.parse('(${tup.$1} > ${tup.$2}) != ${tup.$3}');
 
           expectSuccess(result, <Op>[
-            .value(.int(tup.$1)),
-            .value(.int(tup.$2)),
+            .int(tup.$1),
+            .int(tup.$2),
             const .greaterThan(),
             const .parens(),
-            .value(.int(tup.$3)),
+            .int(tup.$3),
             const .heterogeneousNotEqual(),
           ]);
 
@@ -439,9 +438,9 @@ void main() {
           final result = parser.parse('${tup.$1} > ${tup.$2} + ${tup.$3}');
 
           expectSuccess(result, <Op>[
-            .value(.int(tup.$1)),
-            .value(.int(tup.$2)),
-            .value(.int(tup.$3)),
+            .int(tup.$1),
+            .int(tup.$2),
+            .int(tup.$3),
             const .add(),
             const .greaterThan(),
           ]);
@@ -462,8 +461,8 @@ void main() {
             );
 
             expectSuccess(result, <Op>[
-              .value(.set(.of([.int(tup.$1), .int(tup.$2), .int(tup.$3)]))),
-              .value(.variable(tup.$4)),
+              .set(.of([.int(tup.$1), .int(tup.$2), .int(tup.$3)])),
+              .variable(tup.$4),
               const .contains(),
             ]);
           },
@@ -484,8 +483,8 @@ void main() {
             );
 
             expectSuccess(result, <Op>[
-              .value(.set(.of([.int(tup.$1), .int(tup.$2), .int(tup.$3)]))),
-              .value(.variable(tup.$4)),
+              .set(.of([.int(tup.$1), .int(tup.$2), .int(tup.$3)])),
+              .variable(tup.$4),
               const .contains(),
               const .negate(),
             ]);
@@ -506,8 +505,8 @@ void main() {
             );
 
             expectSuccess(result, <Op>[
-              .value(.set(.of([.date(tup.$1), .date(tup.$2), .date(tup.$3)]))),
-              .value(.date(tup.$1)),
+              .set(.of([.date(tup.$1), .date(tup.$2), .date(tup.$3)])),
+              .date(tup.$1),
               const .contains(),
             ]);
           },
@@ -519,8 +518,8 @@ void main() {
           final result = parser.parse('\$${tup.$1} === "${tup.$2.string}"');
 
           expectSuccess(result, <Op>[
-            .value(.variable(tup.$1)),
-            .value(.str(tup.$2.expected)),
+            .variable(tup.$1),
+            .str(tup.$2.expected),
             const .equal(),
           ]);
         });
@@ -531,8 +530,8 @@ void main() {
           final result = parser.parse('\$${tup.$1} == "${tup.$2.string}"');
 
           expectSuccess(result, <Op>[
-            .value(.variable(tup.$1)),
-            .value(.str(tup.$2.expected)),
+            .variable(tup.$1),
+            .str(tup.$2.expected),
             const .heterogeneousEqual(),
           ]);
         });
@@ -543,8 +542,8 @@ void main() {
           final result = parser.parse('\$${tup.$1} !== "${tup.$2.string}"');
 
           expectSuccess(result, <Op>[
-            .value(.variable(tup.$1)),
-            .value(.str(tup.$2.expected)),
+            .variable(tup.$1),
+            .str(tup.$2.expected),
             const .notEqual(),
           ]);
         });
@@ -555,8 +554,8 @@ void main() {
           final result = parser.parse('\$${tup.$1} != "${tup.$2.string}"');
 
           expectSuccess(result, <Op>[
-            .value(.variable(tup.$1)),
-            .value(.str(tup.$2.expected)),
+            .variable(tup.$1),
+            .str(tup.$2.expected),
             const .heterogeneousNotEqual(),
           ]);
         });
@@ -569,8 +568,8 @@ void main() {
           );
 
           expectSuccess(result, <Op>[
-            .value(.variable(tup.$1)),
-            .value(.str(tup.$2.expected)),
+            .variable(tup.$1),
+            .str(tup.$2.expected),
             const .suffix(),
           ]);
         });
@@ -583,8 +582,8 @@ void main() {
           );
 
           expectSuccess(result, <Op>[
-            .value(.variable(tup.$1)),
-            .value(.str(tup.$2.expected)),
+            .variable(tup.$1),
+            .str(tup.$2.expected),
             const .prefix(),
           ]);
         });
@@ -597,8 +596,8 @@ void main() {
           );
 
           expectSuccess(result, <Op>[
-            .value(.variable(tup.$1)),
-            .value(.str(tup.$2.expected)),
+            .variable(tup.$1),
+            .str(tup.$2.expected),
             const .regex(),
           ]);
         });
@@ -619,16 +618,14 @@ void main() {
             );
 
             expectSuccess(result, <Op>[
-              .value(
-                .set(
-                  .of([
-                    .str(tup.$1.expected),
-                    .str(tup.$2.expected),
-                    .str(tup.$3.expected),
-                  ]),
-                ),
+              .set(
+                .of([
+                  .str(tup.$1.expected),
+                  .str(tup.$2.expected),
+                  .str(tup.$3.expected),
+                ]),
               ),
-              .value(.variable(tup.$4)),
+              .variable(tup.$4),
               const .contains(),
             ]);
           },
@@ -650,16 +647,14 @@ void main() {
             );
 
             expectSuccess(result, <Op>[
-              .value(
-                .set(
-                  .of([
-                    .str(tup.$1.expected),
-                    .str(tup.$2.expected),
-                    .str(tup.$3.expected),
-                  ]),
-                ),
+              .set(
+                .of([
+                  .str(tup.$1.expected),
+                  .str(tup.$2.expected),
+                  .str(tup.$3.expected),
+                ]),
               ),
-              .value(.variable(tup.$4)),
+              .variable(tup.$4),
               const .contains(),
               const .negate(),
             ]);
@@ -674,13 +669,13 @@ void main() {
           );
 
           expectSuccess(result, <Op>[
-            .value(.int(tup.$1)),
-            .value(.int(tup.$2)),
+            .int(tup.$1),
+            .int(tup.$2),
             const .add(),
-            .value(.int(tup.$4)),
-            .value(.int(tup.$3)),
+            .int(tup.$4),
+            .int(tup.$3),
             const .mul(),
-            .value(.int(tup.$4)),
+            .int(tup.$4),
             const .bitwiseAnd(),
             const .bitwiseOr(),
           ]);
@@ -774,8 +769,8 @@ void main() {
             ],
             expressions: [
               .new([
-                const .value(.variable('0')),
-                .value(.date(DateTime.parse('2019-12-04T09:46:41+00:00'))),
+                const .variable('0'),
+                .date(DateTime.parse('2019-12-04T09:46:41+00:00')),
                 const .lessOrEqual(),
               ]),
             ],
@@ -800,8 +795,8 @@ void main() {
             ],
             expressions: [
               .new([
-                const .value(.variable('0')),
-                .value(.date(DateTime.parse('2019-12-04T09:46:41+00:00'))),
+                const .variable('0'),
+                .date(DateTime.parse('2019-12-04T09:46:41+00:00')),
                 const .lessOrEqual(),
               ]),
             ],
@@ -887,7 +882,7 @@ void main() {
           final result = parser.parse(i.toString());
 
           expectSuccess(result, Expr.value(.int(i)));
-          expect(result.value.toOpcodes(), [Op.value(.int(i))]);
+          expect(result.value.toOpcodes(), [Op.int(i)]);
         });
       });
 
@@ -906,8 +901,8 @@ void main() {
             ),
           );
           expect(result.value.toOpcodes(), <Op>[
-            .value(.variable(tup.$1.toString())),
-            .value(.date(tup.$2)),
+            .variable(tup.$1.toString()),
+            .date(tup.$2),
             const .lessOrEqual(),
           ]);
         });
@@ -930,9 +925,9 @@ void main() {
             ),
           );
           expect(result.value.toOpcodes(), <Op>[
-            .value(.int(tup.$1)),
-            .value(.variable(tup.$2)),
-            .value(.int(tup.$3)),
+            .int(tup.$1),
+            .variable(tup.$2),
+            .int(tup.$3),
             const .add(),
             const .lessThan(),
           ]);
@@ -978,19 +973,19 @@ void main() {
               ),
             );
             expect(result.value.toOpcodes(), <Op>[
-              .value(.int(tup.$1)),
-              .value(.variable(tup.$2)),
+              .int(tup.$1),
+              .variable(tup.$2),
               const .lessThan(),
               .closure(
                 params: const [],
                 ops: [
-                  .value(.variable(tup.$3)),
-                  .value(.str(tup.$4.expected)),
+                  .variable(tup.$3),
+                  .str(tup.$4.expected),
                   const .prefix(),
                 ],
               ),
               const .lazyAnd(),
-              .closure(params: const [], ops: [.value(.bool(tup.$5))]),
+              .closure(params: const [], ops: [.bool(tup.$5)]),
               const .lazyAnd(),
             ]);
           },
@@ -1010,9 +1005,9 @@ void main() {
             ),
           );
           expect(result.value.toOpcodes(), <Op>[
-            .value(.int(tup.$1)),
-            .value(.int(tup.$2)),
-            .value(.int(tup.$3)),
+            .int(tup.$1),
+            .int(tup.$2),
+            .int(tup.$3),
             const .mul(),
             const .add(),
           ]);
@@ -1039,11 +1034,11 @@ void main() {
             ),
           );
           expect(result.value.toOpcodes(), <Op>[
-            .value(.int(tup.$1)),
-            .value(.int(tup.$2)),
+            .int(tup.$1),
+            .int(tup.$2),
             const .add(),
             const .parens(),
-            .value(.int(tup.$3)),
+            .int(tup.$3),
             const .mul(),
           ]);
         });
@@ -1068,10 +1063,10 @@ void main() {
             ),
           );
           expect(result.value.toOpcodes(), <Op>[
-            .value(.set(.from([Term.int(tup.$1)]))),
-            .value(.set(.from([Term.int(tup.$2)]))),
+            .set(.from([Term.int(tup.$1)])),
+            .set(.from([Term.int(tup.$2)])),
             const .intersection(),
-            .value(.int(tup.$3)),
+            .int(tup.$3),
             const .contains(),
           ]);
 
@@ -1095,10 +1090,10 @@ void main() {
             ),
           );
           expect(result.value.toOpcodes(), <Op>[
-            .value(.set(.from([Term.int(tup.$1)]))),
-            .value(.set(.from([Term.int(tup.$2)]))),
+            .set(.from([Term.int(tup.$1)])),
+            .set(.from([Term.int(tup.$2)])),
             const .intersection(),
-            .value(.set(.from([Term.int(tup.$3)]))),
+            .set(.from([Term.int(tup.$3)])),
             const .union(),
             const .length(),
           ]);
@@ -1123,11 +1118,11 @@ void main() {
             ),
           );
           expect(result.value.toOpcodes(), <Op>[
-            .value(.set(.from([Term.int(tup.$1)]))),
-            .value(.set(.from([Term.int(tup.$2)]))),
+            .set(.from([Term.int(tup.$1)])),
+            .set(.from([Term.int(tup.$2)])),
             const .intersection(),
             const .length(),
-            .value(.set(.from([Term.int(tup.$3)]))),
+            .set(.from([Term.int(tup.$3)])),
             const .union(),
           ]);
         });
@@ -1155,8 +1150,8 @@ void main() {
               ),
             );
             expect(result.value.toOpcodes(), <Op>[
-              .value(.array(expectedArray)),
-              .value(.variable(tup.$2)),
+              .array(expectedArray),
+              .variable(tup.$2),
               const .contains(),
             ]);
           },
@@ -1173,7 +1168,7 @@ void main() {
               Expr.unary(.ffi(tup.$2), .value(.int(tup.$1))),
             );
             expect(result.value.toOpcodes(), <Op>[
-              .value(.int(tup.$1)),
+              .int(tup.$1),
               .unFfi(tup.$2),
             ]);
           });
@@ -1194,8 +1189,8 @@ void main() {
               ),
             );
             expect(result.value.toOpcodes(), <Op>[
-              .value(.int(tup.$1)),
-              .value(.int(tup.$3)),
+              .int(tup.$1),
+              .int(tup.$3),
               .binFfi(tup.$2),
             ]);
           });
@@ -1206,14 +1201,14 @@ void main() {
         final result = parser.parse('{,}');
 
         expectSuccess(result, Expr.value(.set(.new())));
-        expect(result.value.toOpcodes(), <Op>[.value(.set(.new()))]);
+        expect(result.value.toOpcodes(), [Op.set(.new())]);
       });
 
       test('empty map', () {
         final result = parser.parse('{}');
 
         expectSuccess(result, Expr.value(.map(.new())));
-        expect(result.value.toOpcodes(), <Op>[.value(.map(.new()))]);
+        expect(result.value.toOpcodes(), [Op.map(.new())]);
       });
 
       property('try_or', () {
@@ -1232,11 +1227,8 @@ void main() {
             ),
           );
           expect(result.value.toOpcodes(), <Op>[
-            .closure(
-              params: const [],
-              ops: [.value(.bool(tup.$1)), const .length()],
-            ),
-            .value(.bool(tup.$2)),
+            .closure(params: const [], ops: [.bool(tup.$1), const .length()]),
+            .bool(tup.$2),
             const .tryOr(),
           ]);
         });
@@ -1289,7 +1281,7 @@ void main() {
             .new('fact', const [.variable('var0'), .variable('var1')]),
           ],
           expressions: const [
-            .new([.value(.int(1)), .value(.int(2)), .lessThan()]),
+            .new([.int(1), .int(2), .lessThan()]),
           ],
         ),
       ]);
@@ -1301,7 +1293,7 @@ void main() {
             headTerms: const [],
             predicates: const [],
             expressions: const [
-              .new([.value(.int(1)), .value(.int(2)), .equal()]),
+              .new([.int(1), .int(2), .equal()]),
             ],
           ),
         ]),
@@ -1320,7 +1312,7 @@ void main() {
               .new('fact', const [.int(1234)]),
             ],
             expressions: const [
-              .new([.value(.str('test')), .value(.str('abc')), .prefix()]),
+              .new([.str('test'), .str('abc'), .prefix()]),
             ],
           ),
         ]),
@@ -1331,8 +1323,8 @@ void main() {
             predicates: const [],
             expressions: [
               .new([
-                .value(.date(DateTime.parse('2021-01-01T00:00:00Z'))),
-                .value(.date(DateTime.parse('2021-01-01T00:00:00Z'))),
+                .date(DateTime.parse('2021-01-01T00:00:00Z')),
+                .date(DateTime.parse('2021-01-01T00:00:00Z')),
                 const .lessOrEqual(),
               ]),
             ],
@@ -1356,7 +1348,7 @@ void main() {
             headTerms: const [],
             predicates: const [],
             expressions: const [
-              .new([.value(.bool(true))]),
+              .new([.bool(true)]),
             ],
           ),
         ]),
@@ -1403,7 +1395,7 @@ void main() {
             .new('fact', const [.variable('var0'), .variable('var1')]),
           ],
           expressions: const [
-            .new([.value(.int(1)), .value(.int(2)), .lessThan()]),
+            .new([.int(1), .int(2), .lessThan()]),
           ],
         ),
       ]);
@@ -1415,7 +1407,7 @@ void main() {
             headTerms: const [],
             predicates: const [],
             expressions: const [
-              .new([.value(.int(1)), .value(.int(2)), .equal()]),
+              .new([.int(1), .int(2), .equal()]),
             ],
           ),
         ]),
@@ -1434,7 +1426,7 @@ void main() {
               .new('fact', const [.int(1234)]),
             ],
             expressions: const [
-              .new([.value(.str('test')), .value(.str('abc')), .prefix()]),
+              .new([.str('test'), .str('abc'), .prefix()]),
             ],
           ),
         ]),
@@ -1445,8 +1437,8 @@ void main() {
             predicates: const [],
             expressions: [
               .new([
-                .value(.date(DateTime.parse('2021-01-01T00:00:00Z'))),
-                .value(.date(DateTime.parse('2021-01-01T00:00:00Z'))),
+                .date(DateTime.parse('2021-01-01T00:00:00Z')),
+                .date(DateTime.parse('2021-01-01T00:00:00Z')),
                 const .lessOrEqual(),
               ]),
             ],

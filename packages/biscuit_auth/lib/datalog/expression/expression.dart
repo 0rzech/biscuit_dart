@@ -6,7 +6,6 @@ import 'dart:collection';
 import 'package:biscuit_auth/datalog/expression/eval.dart';
 import 'package:biscuit_auth/datalog/expression/op.dart';
 import 'package:biscuit_auth/datalog/symbol.dart';
-import 'package:biscuit_auth/datalog/term.dart';
 import 'package:biscuit_auth/error.dart';
 import 'package:biscuit_auth/src/boilerplate_gen_annotations.dart';
 import 'package:biscuit_auth/token/builder/term.dart' as b;
@@ -58,7 +57,7 @@ final class const Expression(final List<Op> ops) {
       switch (op) {
         // value
 
-        case ValueOp(:final term):
+        case final Term term:
           if (term case VariableTerm(:final id)) {
             if (values[id] case final value?) {
               stack.add(value);
@@ -132,7 +131,7 @@ final class const Expression(final List<Op> ops) {
 
     for (final op in ops) {
       switch (op) {
-        case ValueOp(:final term):
+        case final Term term:
           stack.add(term.stringify(symbols));
 
         case UnaryOp _:

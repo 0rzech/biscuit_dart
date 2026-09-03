@@ -7,7 +7,6 @@ import 'package:biscuit_auth/parser/builder/expression/expression.dart';
 import 'package:biscuit_auth/parser/builder/expression/op.dart';
 import 'package:biscuit_auth/parser/builder/fact.dart';
 import 'package:biscuit_auth/parser/builder/scope.dart';
-import 'package:biscuit_auth/parser/builder/term.dart';
 import 'package:biscuit_auth/src/boilerplate_gen_annotations.dart';
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
@@ -99,7 +98,7 @@ final class const Rule._({
 
     for (final expression in expressions) {
       for (final op in expression.ops) {
-        if (op case ValueOp(term: VariableTerm(:final value))) {
+        if (op case VariableTerm(:final value)) {
           freeVariables.add(value);
         }
       }

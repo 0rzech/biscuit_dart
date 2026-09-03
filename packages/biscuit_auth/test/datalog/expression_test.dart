@@ -6,9 +6,8 @@ import 'dart:collection';
 import 'package:biscuit_auth/datalog/expression/expression.dart';
 import 'package:biscuit_auth/datalog/expression/op.dart';
 import 'package:biscuit_auth/datalog/symbol.dart';
-import 'package:biscuit_auth/datalog/term.dart';
 import 'package:biscuit_auth/error.dart';
-import 'package:biscuit_auth/parser/builder/term.dart' as b;
+import 'package:biscuit_auth/parser/builder/expression/op.dart' as b;
 import 'package:test/test.dart';
 
 void main() {
@@ -20,8 +19,8 @@ void main() {
         ..insert('var1');
       final tmpSymbols = TemporarySymbolTable(symbols);
       final ops = const <Op>[
-        .value(.int(1)),
-        .value(.variable(.new(2))),
+        .int(1),
+        .variable(.new(2)),
         .lessThan(),
         .parens(),
         .negate(),
@@ -54,7 +53,7 @@ void main() {
             (.bitwiseXor(), 1, 0, 1),
             (.bitwiseXor(), 1, 1, 0),
           ]) {
-        final ops = <Op>[.value(.int(val1)), .value(.int(val2)), op];
+        final ops = <Op>[.int(val1), .int(val2), op];
 
         printOnFailure('\nops: $ops');
 
@@ -72,44 +71,28 @@ void main() {
       final symbols = SymbolTable();
       final tmpSymbols = TemporarySymbolTable(symbols);
 
-      var expr = const Expression(<Op>[
-        .value(.int(1)),
-        .value(.int(0)),
-        .div(),
-      ]);
+      var expr = const Expression(<Op>[.int(1), .int(0), .div()]);
 
       expect(
         () => expr.eval(.identity(), tmpSymbols, .identity()),
         throwsA(const ExecutionError.divisionByZero()),
       );
 
-      expr = const Expression(<Op>[
-        .value(.int(1)),
-        .value(.int(SymbolId.max)),
-        .add(),
-      ]);
+      expr = const Expression(<Op>[.int(1), .int(SymbolId.max), .add()]);
 
       expect(
         () => expr.eval(.identity(), tmpSymbols, .identity()),
         throwsA(const ExecutionError.overflow()),
       );
 
-      expr = const Expression(<Op>[
-        .value(.int(-10)),
-        .value(.int(SymbolId.max)),
-        .sub(),
-      ]);
+      expr = const Expression(<Op>[.int(-10), .int(SymbolId.max), .sub()]);
 
       expect(
         () => expr.eval(.identity(), tmpSymbols, .identity()),
         throwsA(const ExecutionError.overflow()),
       );
 
-      expr = const Expression(<Op>[
-        .value(.int(2)),
-        .value(.int(SymbolId.max)),
-        .mul(),
-      ]);
+      expr = const Expression(<Op>[.int(2), .int(SymbolId.max), .mul()]);
 
       expect(
         () => expr.eval(.identity(), tmpSymbols, .identity()),
@@ -124,17 +107,17 @@ void main() {
         ..insert('var1');
 
       var expr = const Expression(<Op>[
-        .value(.int(-1)),
-        .value(.variable(.new(1026))),
+        .int(-1),
+        .variable(.new(1026)),
         .lessThan(),
       ]);
 
       expect(expr.stringify(symbols), '-1 < \$var1');
 
       expr = const Expression(<Op>[
-        .value(.int(1)),
-        .value(.int(2)),
-        .value(.int(3)),
+        .int(1),
+        .int(2),
+        .int(3),
         .add(),
         .lessThan(),
       ]);
@@ -142,10 +125,10 @@ void main() {
       expect(expr.stringify(symbols), '1 < 2 + 3');
 
       expr = const Expression(<Op>[
-        .value(.int(1)),
-        .value(.int(2)),
+        .int(1),
+        .int(2),
         .add(),
-        .value(.int(3)),
+        .int(3),
         .lessThan(),
       ]);
 
@@ -156,7 +139,7 @@ void main() {
       final symbols = SymbolTable();
       final tmpSymbols = TemporarySymbolTable(symbols);
 
-      const operands = <Op>[.value(Term.nil()), .value(Term.nil())];
+      const operands = <Op>[.nil(), .nil()];
       const operators = <Op>[.equal(), .heterogeneousEqual()];
 
       for (final op in operators) {
@@ -175,7 +158,7 @@ void main() {
       final symbols = SymbolTable();
       final tmpSymbols = TemporarySymbolTable(symbols);
 
-      const operands = <Op>[.value(Term.nil()), .value(Term.nil())];
+      const operands = <Op>[.nil(), .nil()];
       const operators = <Op>[.notEqual(), .heterogeneousNotEqual()];
 
       for (final op in operators) {
@@ -194,7 +177,7 @@ void main() {
       final symbols = SymbolTable();
       final tmpSymbols = TemporarySymbolTable(symbols);
 
-      const operands = <Op>[.value(Term.nil()), .value(.int(1))];
+      const operands = <Op>[.nil(), .int(1)];
       const operators = <(Op, bool)>[
         (.heterogeneousNotEqual(), true),
         (.heterogeneousEqual(), false),
@@ -217,16 +200,16 @@ void main() {
       final tmpSymbols = TemporarySymbolTable(symbols);
 
       final operandsSamples = <List<Op>>[
-        const [.value(.bool(true)), .value(.int(1))],
-        const [.value(.bool(true)), .value(.str(.new(1)))],
-        const [.value(.int(1)), .value(.str(.new(1)))],
+        const [.bool(true), .int(1)],
+        const [.bool(true), .str(.new(1))],
+        const [.int(1), .str(.new(1))],
         [
-          .value(.set(.of({const .int(1)}))),
-          .value(.set(.of({const .str(.new(1))}))),
+          .set(.of({const .int(1)})),
+          .set(.of({const .str(.new(1))})),
         ],
-        [.value(.bytes(.new(0))), const .value(.int(1))],
-        [.value(.bytes(.new(0))), const .value(.str(.new(1025)))],
-        [.value(.date(.fromMillisecondsSinceEpoch(12))), const .value(.int(1))],
+        [.bytes(.new(0)), const .int(1)],
+        [.bytes(.new(0)), const .str(.new(1025))],
+        [.date(.fromMillisecondsSinceEpoch(12)), const .int(1)],
       ];
 
       const operators = <(Op, bool)>[
@@ -255,12 +238,12 @@ void main() {
       final tmpSymbols = TemporarySymbolTable(symbols);
 
       final operandsSamples = <List<Op>>[
-        const [.value(Term.bool(true)), .value(.int(1))],
-        const [.value(Term.bool(true)), .value(.str(.new(1)))],
-        const [.value(.int(1)), .value(.str(.new(1)))],
-        [.value(.bytes(.new(0))), const .value(.int(1))],
-        [.value(.bytes(.new(0))), const .value(.str(.new(1025)))],
-        [.value(.date(.fromMillisecondsSinceEpoch(12))), const .value(.int(1))],
+        const [Term.bool(true), .int(1)],
+        const [Term.bool(true), .str(.new(1))],
+        const [.int(1), .str(.new(1))],
+        [.bytes(.new(0)), const .int(1)],
+        [.bytes(.new(0)), const .str(.new(1025))],
+        [.date(.fromMillisecondsSinceEpoch(12)), const .int(1)],
       ];
 
       const operators = <Op>[.notEqual(), .equal()];
@@ -287,12 +270,12 @@ void main() {
       final tmpSymbols = TemporarySymbolTable(symbols);
 
       const expr = Expression([
-        .value(.bool(false)),
+        .bool(false),
         .closure(
           params: [],
           ops: [
-            .value(.bool(true)),
-            .closure(params: [], ops: [.value(.bool(true))]),
+            .bool(true),
+            .closure(params: [], ops: [.bool(true)]),
             .lazyAnd(),
           ],
         ),
@@ -310,8 +293,8 @@ void main() {
       final tmpSymbols = TemporarySymbolTable(symbols);
 
       var expr = Expression([
-        .value(.set(.of({const .bool(false), const .bool(true)}))),
-        .closure(params: [p], ops: [.value(.variable(p))]),
+        .set(.of({const .bool(false), const .bool(true)})),
+        .closure(params: [p], ops: [.variable(p)]),
         const .any(),
       ]);
 
@@ -322,10 +305,10 @@ void main() {
       expect(res, const Term.bool(true));
 
       expr = Expression([
-        .value(.set(.of({const .int(1), const .int(2)}))),
+        .set(.of({const .int(1), const .int(2)})),
         .closure(
           params: [p],
-          ops: [.value(.variable(p)), const .value(.int(0)), const .lessThan()],
+          ops: [.variable(p), const .int(0), const .lessThan()],
         ),
         const .any(),
       ]);
@@ -337,8 +320,8 @@ void main() {
       expect(res, const Term.bool(false));
 
       expr = Expression([
-        .value(.set(.of({const .int(1), const .int(2)}))),
-        .closure(params: [p], ops: const [.value(.int(0))]),
+        .set(.of({const .int(1), const .int(2)})),
+        .closure(params: [p], ops: const [.int(0)]),
         const .any(),
       ]);
 
@@ -356,14 +339,10 @@ void main() {
       final tmpSymbols = TemporarySymbolTable(symbols);
 
       var expr = Expression([
-        .value(.set(.of({const .int(1), const .int(2)}))),
+        .set(.of({const .int(1), const .int(2)})),
         .closure(
           params: [p],
-          ops: [
-            .value(.variable(p)),
-            const .value(.int(0)),
-            const .greaterThan(),
-          ],
+          ops: [.variable(p), const .int(0), const .greaterThan()],
         ),
         const .all(),
       ]);
@@ -375,10 +354,10 @@ void main() {
       expect(res, const Term.bool(true));
 
       expr = Expression([
-        .value(.set(.of({const .int(1), const .int(2)}))),
+        .set(.of({const .int(1), const .int(2)})),
         .closure(
           params: [p],
-          ops: [.value(.variable(p)), const .value(.int(0)), const .lessThan()],
+          ops: [.variable(p), const .int(0), const .lessThan()],
         ),
         const .all(),
       ]);
@@ -390,8 +369,8 @@ void main() {
       expect(res, const Term.bool(false));
 
       expr = Expression([
-        .value(.set(.of({const .int(1), const .int(2)}))),
-        .closure(params: [p], ops: const [.value(.int(0))]),
+        .set(.of({const .int(1), const .int(2)})),
+        .closure(params: [p], ops: const [.int(0)]),
         const .all(),
       ]);
 
@@ -410,26 +389,20 @@ void main() {
       final tmpSymbols = TemporarySymbolTable(symbols);
 
       final expr = Expression([
-        .value(.set(.of({const .int(1), const .int(2), const .int(3)}))),
+        .set(.of({const .int(1), const .int(2), const .int(3)})),
         .closure(
           params: [p],
           ops: [
-            .value(.variable(p)),
-            const .value(.int(1)),
+            .variable(p),
+            const .int(1),
             const .greaterThan(),
             .closure(
               params: [],
               ops: [
-                .value(
-                  .set(.of({const .int(3), const .int(4), const .int(5)})),
-                ),
+                .set(.of({const .int(3), const .int(4), const .int(5)})),
                 .closure(
                   params: [q],
-                  ops: [
-                    .value(.variable(p)),
-                    .value(.variable(q)),
-                    const .equal(),
-                  ],
+                  ops: [.variable(p), .variable(q), const .equal()],
                 ),
                 const .any(),
               ],
@@ -454,14 +427,10 @@ void main() {
       final values = HashMap.of({p: const Term.nil()});
 
       var expr = Expression([
-        .value(.set(.of({const .int(1), const .int(2)}))),
+        .set(.of({const .int(1), const .int(2)})),
         .closure(
           params: [p],
-          ops: [
-            .value(.variable(p)),
-            const .value(.int(0)),
-            const .greaterThan(),
-          ],
+          ops: [.variable(p), const .int(0), const .greaterThan()],
         ),
         const .all(),
       ]);
@@ -478,26 +447,20 @@ void main() {
       tmpSymbols = TemporarySymbolTable(symbols);
 
       expr = Expression([
-        .value(.set(.of({const .int(1), const .int(2), const .int(3)}))),
+        .set(.of({const .int(1), const .int(2), const .int(3)})),
         .closure(
           params: [p],
           ops: [
-            .value(.variable(p)),
-            const .value(.int(1)),
+            .variable(p),
+            const .int(1),
             const .greaterThan(),
             .closure(
               params: [],
               ops: [
-                .value(
-                  .set(.of({const .int(3), const .int(4), const .int(5)})),
-                ),
+                .set(.of({const .int(3), const .int(4), const .int(5)})),
                 .closure(
                   params: [p],
-                  ops: [
-                    .value(.variable(p)),
-                    .value(.variable(p)),
-                    const .equal(),
-                  ],
+                  ops: [.variable(p), .variable(p), const .equal()],
                 ),
                 const .any(),
               ],
@@ -521,8 +484,8 @@ void main() {
       final tmpSymbols = TemporarySymbolTable(symbols);
 
       var expr = const Expression([
-        .value(.array([.int(0), .int(1)])),
-        .value(.array([.int(0), .int(1)])),
+        .array([.int(0), .int(1)]),
+        .array([.int(0), .int(1)]),
         .equal(),
       ]);
 
@@ -531,8 +494,8 @@ void main() {
       expect(res, const Term.bool(true));
 
       expr = const Expression([
-        .value(.array([.int(0), .int(1)])),
-        .value(.array([.int(0)])),
+        .array([.int(0), .int(1)]),
+        .array([.int(0)]),
         .equal(),
       ]);
 
@@ -541,8 +504,8 @@ void main() {
       expect(res, const Term.bool(false));
 
       expr = const Expression([
-        .value(.array([.int(0), .int(1)])),
-        .value(.int(1)),
+        .array([.int(0), .int(1)]),
+        .int(1),
         .contains(),
       ]);
 
@@ -551,8 +514,8 @@ void main() {
       expect(res, const Term.bool(true));
 
       expr = const Expression([
-        .value(.array([.int(0), .int(1)])),
-        .value(.int(2)),
+        .array([.int(0), .int(1)]),
+        .int(2),
         .contains(),
       ]);
 
@@ -561,8 +524,8 @@ void main() {
       expect(res, const Term.bool(false));
 
       expr = const Expression([
-        .value(.array([.int(0), .int(1), .int(2)])),
-        .value(.array([.int(0), .int(1)])),
+        .array([.int(0), .int(1), .int(2)]),
+        .array([.int(0), .int(1)]),
         .prefix(),
       ]);
 
@@ -571,8 +534,8 @@ void main() {
       expect(res, const Term.bool(true));
 
       expr = const Expression([
-        .value(.array([.int(0), .int(1), .int(2)])),
-        .value(.array([.int(2), .int(1)])),
+        .array([.int(0), .int(1), .int(2)]),
+        .array([.int(2), .int(1)]),
         .prefix(),
       ]);
 
@@ -581,8 +544,8 @@ void main() {
       expect(res, const Term.bool(false));
 
       expr = const Expression([
-        .value(.array([.int(0), .int(1), .int(2)])),
-        .value(.array([.int(1), .int(2)])),
+        .array([.int(0), .int(1), .int(2)]),
+        .array([.int(1), .int(2)]),
         .suffix(),
       ]);
 
@@ -591,8 +554,8 @@ void main() {
       expect(res, const Term.bool(true));
 
       expr = const Expression([
-        .value(.array([.int(0), .int(1), .int(2)])),
-        .value(.array([.int(0), .int(2)])),
+        .array([.int(0), .int(1), .int(2)]),
+        .array([.int(0), .int(2)]),
         .suffix(),
       ]);
 
@@ -601,8 +564,8 @@ void main() {
       expect(res, const Term.bool(false));
 
       expr = const Expression([
-        .value(.array([.int(0), .int(1), .int(2)])),
-        .value(.int(1)),
+        .array([.int(0), .int(1), .int(2)]),
+        .int(1),
         .get(),
       ]);
 
@@ -611,8 +574,8 @@ void main() {
       expect(res, const Term.int(1));
 
       expr = const Expression([
-        .value(.array([.int(0), .int(1), .int(2)])),
-        .value(.int(3)),
+        .array([.int(0), .int(1), .int(2)]),
+        .int(3),
         .get(),
       ]);
 
@@ -623,14 +586,10 @@ void main() {
       final p = symbols.insert('param');
 
       expr = Expression([
-        const .value(.array([.int(1), .int(2)])),
+        const .array([.int(1), .int(2)]),
         .closure(
           params: [p],
-          ops: [
-            .value(.variable(p)),
-            const .value(.int(0)),
-            const .greaterThan(),
-          ],
+          ops: [.variable(p), const .int(0), const .greaterThan()],
         ),
         const .all(),
       ]);
@@ -642,10 +601,10 @@ void main() {
       expect(res, const Term.bool(true));
 
       expr = Expression([
-        const .value(.array([.int(1), .int(2)])),
+        const .array([.int(1), .int(2)]),
         .closure(
           params: [p],
-          ops: [.value(.variable(p)), const .value(.int(0)), const .equal()],
+          ops: [.variable(p), const .int(0), const .equal()],
         ),
         const .any(),
       ]);
@@ -663,21 +622,17 @@ void main() {
       final tmpSymbols = TemporarySymbolTable(symbols);
 
       var expr = Expression([
-        .value(
-          .map(
-            .of({
-              const .str(.new(1)): const .int(0),
-              const .str(.new(2)): const .int(1),
-            }),
-          ),
+        .map(
+          .of({
+            const .str(.new(1)): const .int(0),
+            const .str(.new(2)): const .int(1),
+          }),
         ),
-        .value(
-          .map(
-            .of({
-              const .str(.new(2)): const .int(1),
-              const .str(.new(1)): const .int(0),
-            }),
-          ),
+        .map(
+          .of({
+            const .str(.new(2)): const .int(1),
+            const .str(.new(1)): const .int(0),
+          }),
         ),
         const .equal(),
       ]);
@@ -687,15 +642,13 @@ void main() {
       expect(res, const Term.bool(true));
 
       expr = Expression([
-        .value(
-          .map(
-            .of({
-              const .str(.new(1)): const .int(0),
-              const .str(.new(2)): const .int(1),
-            }),
-          ),
+        .map(
+          .of({
+            const .str(.new(1)): const .int(0),
+            const .str(.new(2)): const .int(1),
+          }),
         ),
-        .value(.map(.of({const .str(.new(1)): const .int(0)}))),
+        .map(.of({const .str(.new(1)): const .int(0)})),
         const .equal(),
       ]);
 
@@ -704,15 +657,13 @@ void main() {
       expect(res, const Term.bool(false));
 
       expr = Expression([
-        .value(
-          .map(
-            .of({
-              const .str(.new(1)): const .int(0),
-              const .str(.new(2)): const .int(1),
-            }),
-          ),
+        .map(
+          .of({
+            const .str(.new(1)): const .int(0),
+            const .str(.new(2)): const .int(1),
+          }),
         ),
-        const .value(.str(.new(1))),
+        const .str(.new(1)),
         const .contains(),
       ]);
 
@@ -721,15 +672,13 @@ void main() {
       expect(res, const Term.bool(true));
 
       expr = Expression([
-        .value(
-          .map(
-            .of({
-              const .str(.new(1)): const .int(0),
-              const .str(.new(2)): const .int(1),
-            }),
-          ),
+        .map(
+          .of({
+            const .str(.new(1)): const .int(0),
+            const .str(.new(2)): const .int(1),
+          }),
         ),
-        const .value(.int(0)),
+        const .int(0),
         const .contains(),
       ]);
 
@@ -738,15 +687,13 @@ void main() {
       expect(res, const Term.bool(false));
 
       expr = Expression([
-        .value(
-          .map(
-            .of({
-              const .str(.new(1)): const .int(0),
-              const .int(2): const .int(1),
-            }),
-          ),
+        .map(
+          .of({
+            const .str(.new(1)): const .int(0),
+            const .int(2): const .int(1),
+          }),
         ),
-        const .value(.str(.new(1))),
+        const .str(.new(1)),
         const .get(),
       ]);
 
@@ -755,15 +702,13 @@ void main() {
       expect(res, const Term.int(0));
 
       expr = Expression([
-        .value(
-          .map(
-            .of({
-              const .str(.new(1)): const .int(0),
-              const .int(2): const .int(1),
-            }),
-          ),
+        .map(
+          .of({
+            const .str(.new(1)): const .int(0),
+            const .int(2): const .int(1),
+          }),
         ),
-        const .value(.int(2)),
+        const .int(2),
         const .get(),
       ]);
 
@@ -772,15 +717,13 @@ void main() {
       expect(res, const Term.int(1));
 
       expr = Expression([
-        .value(
-          .map(
-            .of({
-              const .str(.new(1)): const .int(0),
-              const .str(.new(2)): const .int(1),
-            }),
-          ),
+        .map(
+          .of({
+            const .str(.new(1)): const .int(0),
+            const .str(.new(2)): const .int(1),
+          }),
         ),
-        const .value(.int(0)),
+        const .int(0),
         const .get(),
       ]);
 
@@ -789,15 +732,13 @@ void main() {
       expect(res, const Term.nil());
 
       expr = Expression([
-        .value(
-          .map(
-            .of({
-              const .str(.new(1)): const .int(0),
-              const .str(.new(2)): const .int(1),
-            }),
-          ),
+        .map(
+          .of({
+            const .str(.new(1)): const .int(0),
+            const .str(.new(2)): const .int(1),
+          }),
         ),
-        const .value(.str(.new(3))),
+        const .str(.new(3)),
         const .get(),
       ]);
 
@@ -806,21 +747,19 @@ void main() {
       expect(res, const Term.nil());
 
       expr = Expression([
-        .value(
-          .map(
-            .of({
-              const .str(.new(1)): const .int(0),
-              const .str(.new(2)): const .int(1),
-            }),
-          ),
+        .map(
+          .of({
+            const .str(.new(1)): const .int(0),
+            const .str(.new(2)): const .int(1),
+          }),
         ),
         .closure(
           params: [p],
           ops: [
-            .value(.variable(p)),
-            const .value(.int(1)),
+            .variable(p),
+            const .int(1),
             const .get(),
-            const .value(.int(2)),
+            const .int(2),
             const .lessThan(),
           ],
         ),
@@ -834,21 +773,19 @@ void main() {
       expect(res, const Term.bool(true));
 
       expr = Expression([
-        .value(
-          .map(
-            .of({
-              const .str(.new(1)): const .int(0),
-              const .str(.new(2)): const .int(1),
-            }),
-          ),
+        .map(
+          .of({
+            const .str(.new(1)): const .int(0),
+            const .str(.new(2)): const .int(1),
+          }),
         ),
         .closure(
           params: [p],
           ops: [
-            .value(.variable(p)),
-            const .value(.int(0)),
+            .variable(p),
+            const .int(0),
             const .get(),
-            const .value(.str(.new(1))),
+            const .str(.new(1)),
             const .equal(),
           ],
         ),
@@ -877,72 +814,68 @@ void main() {
       final tmpSymbols = TemporarySymbolTable(symbols);
 
       final ops = <Op>[
-        const .value(.int(60)),
-        const .value(.int(0)),
+        const .int(60),
+        const .int(0),
         .binFfi(testBin),
-        .value(.str(i)),
-        .value(.str(j)),
+        .str(i),
+        .str(j),
         .binFfi(testBin),
         const .and(),
-        const .value(.int(42)),
+        const .int(42),
         .unFfi(testUn),
         const .and(),
-        const .value(.int(42)),
+        const .int(42),
         .unFfi(testClosure),
         const .and(),
-        .value(.str(i)),
+        .str(i),
         .unFfi(testClosure),
         const .and(),
-        const .value(.int(42)),
+        const .int(42),
         .unFfi(testFn),
         const .and(),
-        const .value(.int(42)),
+        const .int(42),
         .unFfi(idFn),
-        const .value(.int(42)),
+        const .int(42),
         const .heterogeneousEqual(),
         const .and(),
-        .value(.str(i)),
+        .str(i),
         .unFfi(idFn),
-        .value(.str(i)),
+        .str(i),
         const .heterogeneousEqual(),
         const .and(),
-        const .value(.bool(true)),
+        const .bool(true),
         .unFfi(idFn),
-        const .value(.bool(true)),
+        const .bool(true),
         const .heterogeneousEqual(),
         const .and(),
-        .value(.date(.fromMillisecondsSinceEpoch(0))),
+        .date(.fromMillisecondsSinceEpoch(0)),
         .unFfi(idFn),
-        .value(.date(.fromMillisecondsSinceEpoch(0))),
+        .date(.fromMillisecondsSinceEpoch(0)),
         const .heterogeneousEqual(),
         const .and(),
-        .value(.bytes(.fromList([42]))),
+        .bytes(.fromList([42])),
         .unFfi(idFn),
-        .value(.bytes(.fromList([42]))),
+        .bytes(.fromList([42])),
         const .heterogeneousEqual(),
         const .and(),
-        const .value(.nil()),
+        const .nil(),
         .unFfi(idFn),
-        const .value(.nil()),
+        const .nil(),
         const .heterogeneousEqual(),
         const .and(),
-        const .value(.array([.nil()])),
+        const .array([.nil()]),
         .unFfi(idFn),
-        const .value(.array([.nil()])),
+        const .array([.nil()]),
         const .heterogeneousEqual(),
         const .and(),
-        .value(.set(.of(const {.nil()}))),
+        .set(.of(const {.nil()})),
         .unFfi(idFn),
-        .value(.set(.of(const {.nil()}))),
+        .set(.of(const {.nil()})),
         const .heterogeneousEqual(),
         const .and(),
-        .value(
-          .map(.of({const .int(42): const .nil(), .str(i): const .nil()})),
-        ),
+        .map(.of({const .int(42): const .nil(), .str(i): const .nil()})),
         .unFfi(idFn),
-        .value(
-          .map(.of({const .int(42): const .nil(), .str(i): const .nil()})),
-        ),
+        .map(.of({const .int(42): const .nil(), .str(i): const .nil()})),
         const .heterogeneousEqual(),
         const .and(),
       ];
@@ -1010,14 +943,9 @@ void main() {
       var expr = const Expression([
         .closure(
           params: [],
-          ops: [
-            .value(.bool(true)),
-            .value(.int(0)),
-            .greaterThan(),
-            .parens(),
-          ],
+          ops: [.bool(true), .int(0), .greaterThan(), .parens()],
         ),
-        .value(.bool(false)),
+        .bool(false),
         .tryOr(),
       ]);
 
@@ -1028,11 +956,8 @@ void main() {
       expect(res, const Term.bool(false));
 
       expr = const Expression([
-        .closure(
-          params: [],
-          ops: [.value(.int(0)), .value(.int(0)), .equal(), .parens()],
-        ),
-        .value(.bool(false)),
+        .closure(params: [], ops: [.int(0), .int(0), .equal(), .parens()]),
+        .bool(false),
         .tryOr(),
       ]);
 

@@ -11,7 +11,6 @@ import 'package:biscuit_auth/parser/builder/fact.dart';
 import 'package:biscuit_auth/parser/builder/policy.dart';
 import 'package:biscuit_auth/parser/builder/rule.dart';
 import 'package:biscuit_auth/parser/builder/scope.dart';
-import 'package:biscuit_auth/parser/builder/term.dart';
 import 'package:biscuit_auth/parser/comment.dart';
 import 'package:biscuit_auth/parser/expression.dart';
 import 'package:biscuit_auth/parser/rule_body.dart';
