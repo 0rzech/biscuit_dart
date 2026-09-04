@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:biscuit_auth/src/boilerplate_gen_annotations.dart';
 import 'package:build/build.dart';
@@ -54,10 +55,10 @@ final class BoilerplateGenerator(final DartEmitter _emitter)
         } else if (asSet(type) case final type?) {
           mustImportCollection = true;
           return colEq('SetEquality', type, [f]);
-        } else if (asUnmodifiableList(type) case (final type, final elem)?) {
-          return colEq('ListEquality', type, [f, elem]);
+        } else if (asUnmodifiableList(type) case (final type, final val)?) {
+          return colEq('ListEquality', type, [f, val]);
         } else {
-          return elemRef(f).equalTo(propChain([f], first: other));
+          return elemRef(f).equalTo(propAccessChain([f], first: other));
         }
       });
 
@@ -106,8 +107,8 @@ final class BoilerplateGenerator(final DartEmitter _emitter)
           return colHash('MapEquality', type, [f]);
         } else if (asSet(type) case final type?) {
           return colHash('SetEquality', type, [f]);
-        } else if (asUnmodifiableList(type) case (final type, final elem)?) {
-          return colHash('ListEquality', type, [f, elem]);
+        } else if (asUnmodifiableList(type) case (final type, final val)?) {
+          return colHash('ListEquality', type, [f, val]);
         } else {
           return elemRef(f);
         }
@@ -217,35 +218,57 @@ InterfaceType? asMap(DartType type) {
   return (type, getter);
 }
 
-Expression colEq(String className, InterfaceType type, List<Element> elements) {
+Expression colEq(String className, InterfaceType type, List<Element> elemPath) {
   return TypeReference((builder) {
-        builder.symbol = className;
-        builder.types.addAll(type.typeArguments.map(toTypeRef));
-      })
-      .constInstance(const [])
-      .property('equals')
-      .call([propChain(elements), propChain(elements, first: other)]);
+    builder.symbol = className;
+    builder.types.addAll(type.typeArguments.map(toTypeRef));
+  }).constInstance(const []).property('equals').call([
+    propAccessChain(elemPath),
+    propAccessChain(elemPath, first: other),
+  ]);
 }
 
 Expression colHash(
   String className,
   InterfaceType type,
-  List<Element> elements,
+  List<Element> elemPath,
 ) => TypeReference((builder) {
   builder.symbol = className;
   builder.types.addAll(type.typeArguments.map(toTypeRef));
-}).constInstance(const []).property('hash').call([propChain(elements)]);
+}).constInstance(const []).property('hash').call([propAccessChain(elemPath)]);
 
-Expression propChain(List<Element> elements, {Reference? first}) {
-  if (elements.isEmpty) throw ArgumentError('elements must not be empty');
+Expression propAccessChain(List<Element> chain, {Reference? first}) {
+  if (chain.isEmpty) throw ArgumentError('elements must not be empty');
 
-  return first == null
-      ? elements.skip(1).fold(elemRef(elements.first), prop)
-      : elements.fold(first, prop);
+  switch (first) {
+    case null:
+      final first = chain.first;
+      final suffix = propSuffix(first);
+      return chain.skip(1).fold((elemRef(first), suffix), accessProp).$1;
+
+    default:
+      return chain.fold((first, NullabilitySuffix.none), accessProp).$1;
+  }
 }
 
-Expression prop(Expression expression, Element element) =>
-    expression.property(elemName(element));
+(Expression, NullabilitySuffix) accessProp(
+  (Expression, NullabilitySuffix) expression,
+  Element property,
+) {
+  final (expr, exprSuff) = expression;
+  final prop = exprSuff == .question ? expr.nullSafeProperty : expr.property;
+  return (prop(elemName(property)), propSuffix(property));
+}
+
+NullabilitySuffix propSuffix(Element property) => switch (property) {
+  PropertyInducingElement _ => property.type.nullabilitySuffix,
+  PropertyAccessorElement _ => property.type.nullabilitySuffix,
+  _ => throw ArgumentError.value(
+    property,
+    'property',
+    'Expected $PropertyInducingElement or $PropertyAccessorElement',
+  ),
+};
 
 Expression elemRef(Element element) => refer(elemName(element));
 
