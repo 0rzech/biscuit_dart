@@ -28,10 +28,12 @@ final class const Fact(final Predicate predicate) {
 
 @immutable
 @boilerplate
-final class const Predicate(
-  final SymbolId name, [
-  final List<Term> terms = const [],
-]) {
+final class Predicate {
+  final SymbolId name;
+  final List<Term> terms;
+
+  new(this.name, [List<Term>? terms]) : terms = terms ?? [];
+
   Predicate copyWith({SymbolId? name, List<Term>? terms}) =>
       .new(name ?? this.name, terms ?? this.terms);
 
