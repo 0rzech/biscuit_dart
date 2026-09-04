@@ -22,9 +22,9 @@ part 'gen/rule.bp.dart';
 @boilerplate
 final class const Rule._(
   final Predicate head,
-  final UnmodifiableList<Predicate> body,
-  final UnmodifiableList<Expression> expressions,
-  final UnmodifiableList<Scope> scopes,
+  final ControlledList<Predicate> body,
+  final ControlledList<Expression> expressions,
+  final ControlledList<Scope> scopes,
 ) {
   factory({
     required SymbolId headName,

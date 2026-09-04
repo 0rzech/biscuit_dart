@@ -55,7 +55,7 @@ final class BoilerplateGenerator(final DartEmitter _emitter)
         } else if (asSet(type) case final type?) {
           mustImportCollection = true;
           return colEq('SetEquality', type, [f]);
-        } else if (asUnmodifiableList(type) case (final type, final val)?) {
+        } else if (asControlledList(type) case (final type, final val)?) {
           return colEq('ListEquality', type, [f, val]);
         } else {
           return elemRef(f).equalTo(propAccessChain([f], first: other));
@@ -107,7 +107,7 @@ final class BoilerplateGenerator(final DartEmitter _emitter)
           return colHash('MapEquality', type, [f]);
         } else if (asSet(type) case final type?) {
           return colHash('SetEquality', type, [f]);
-        } else if (asUnmodifiableList(type) case (final type, final val)?) {
+        } else if (asControlledList(type) case (final type, final val)?) {
           return colHash('ListEquality', type, [f, val]);
         } else {
           return elemRef(f);
@@ -187,14 +187,14 @@ InterfaceType? asMap(DartType type) {
   return type.allSupertypes.firstWhereOrNull((t) => t.isDartCoreMap);
 }
 
-(InterfaceType, Element)? asUnmodifiableList(DartType type) {
+(InterfaceType, Element)? asControlledList(DartType type) {
   if (type is! InterfaceType) return null;
-  if (!unmodifiableListChecker.isExactlyType(type)) return null;
+  if (!controlledListChecker.isExactlyType(type)) return null;
 
   final element = type.element;
   if (element is! ExtensionTypeElement) {
     throw InvalidGenerationSourceError(
-      'Expecting UnmodifiableList to be an extension type',
+      'Expected extension type',
       element: element,
     );
   }
@@ -202,15 +202,15 @@ InterfaceType? asMap(DartType type) {
   final name = element.representation.name;
   if (name == null) {
     throw InvalidGenerationSourceError(
-      'Missing UnmodifiableList representation name',
+      'Missing representation name',
       element: element,
     );
   }
 
   final getter = element.getGetter(name);
-  if (getter == null) {
+  if (getter == null || getter.isPrivate) {
     throw InvalidGenerationSourceError(
-      'Missing UnmodifiableList getter',
+      'Missing public implicit getter',
       element: element,
     );
   }
@@ -295,8 +295,8 @@ TypeReference toTypeRef(DartType type) => TypeReference((builder) {
   });
 });
 
-const unmodifiableListChecker = TypeChecker.fromUrl(
-  'package:biscuit_auth/src/collection.dart#UnmodifiableList',
+const controlledListChecker = TypeChecker.fromUrl(
+  'package:biscuit_auth/src/collection.dart#ControlledList',
 );
 
 final other = refer('other');

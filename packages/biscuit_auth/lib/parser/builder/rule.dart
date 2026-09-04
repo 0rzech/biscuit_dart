@@ -18,10 +18,10 @@ part 'gen/rule.bp.dart';
 @boilerplate
 final class const Rule._({
   required final Predicate head,
-  required final UnmodifiableList<Predicate> body,
-  required final UnmodifiableList<Expression> expressions,
+  required final ControlledList<Predicate> body,
+  required final ControlledList<Expression> expressions,
   required final HashMap<String, Term?>? parameters,
-  required final UnmodifiableList<Scope> scopes,
+  required final ControlledList<Scope> scopes,
   required final HashMap<String, PublicKey?>? scopeParameters,
 }) {
   factory({

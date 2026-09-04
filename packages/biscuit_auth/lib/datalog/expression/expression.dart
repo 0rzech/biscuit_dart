@@ -47,7 +47,7 @@ final class const ExternFn(
 @immutable
 @boilerplate
 final class Expression {
-  final UnmodifiableList<Op> ops;
+  final ControlledList<Op> ops;
 
   new(List<Op> ops) : ops = .new(ops);
 
