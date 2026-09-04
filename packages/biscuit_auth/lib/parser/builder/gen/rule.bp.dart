@@ -12,16 +12,22 @@ extension $RuleExtension on Rule {
       identical(this, other) ||
       other is Rule &&
           head == other.head &&
-          const ListEquality<Predicate>().equals(body, other.body) &&
+          const ListEquality<Predicate>().equals(
+            body.value,
+            other.body.value,
+          ) &&
           const ListEquality<Expression>().equals(
-            expressions,
-            other.expressions,
+            expressions.value,
+            other.expressions.value,
           ) &&
           const MapEquality<String, Term?>().equals(
             parameters,
             other.parameters,
           ) &&
-          const ListEquality<Scope>().equals(scopes, other.scopes) &&
+          const ListEquality<Scope>().equals(
+            scopes.value,
+            other.scopes.value,
+          ) &&
           const MapEquality<String, PublicKey?>().equals(
             scopeParameters,
             other.scopeParameters,
@@ -30,10 +36,10 @@ extension $RuleExtension on Rule {
   int get _hashCode => Object.hash(
     'Rule',
     head,
-    const ListEquality<Predicate>().hash(body),
-    const ListEquality<Expression>().hash(expressions),
+    const ListEquality<Predicate>().hash(body.value),
+    const ListEquality<Expression>().hash(expressions.value),
     const MapEquality<String, Term?>().hash(parameters),
-    const ListEquality<Scope>().hash(scopes),
+    const ListEquality<Scope>().hash(scopes.value),
     const MapEquality<String, PublicKey?>().hash(scopeParameters),
   );
 

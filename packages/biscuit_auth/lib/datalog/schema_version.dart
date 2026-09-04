@@ -114,7 +114,7 @@ final class const SchemaVersion({
   }
 }
 
-bool containsV31Op(List<Expression> expressions) => expressions.any(
+bool containsV31Op(Iterable<Expression> expressions) => expressions.any(
   (expression) => expression.ops.any(
     (op) => switch (op) {
       BitwiseAnd _ || BitwiseOr _ || BitwiseXor _ || NotEqual _ => true,
@@ -123,7 +123,7 @@ bool containsV31Op(List<Expression> expressions) => expressions.any(
   ),
 );
 
-bool containsV33Op(List<Expression> expressions) => expressions.any(
+bool containsV33Op(Iterable<Expression> expressions) => expressions.any(
   (expression) => expression.ops.any(
     (op) => switch (op) {
       final Term term => isV33Term(term),

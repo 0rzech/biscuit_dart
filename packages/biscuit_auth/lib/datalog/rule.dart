@@ -12,6 +12,7 @@ import 'package:biscuit_auth/datalog/scope.dart';
 import 'package:biscuit_auth/datalog/symbol.dart';
 import 'package:biscuit_auth/error.dart';
 import 'package:biscuit_auth/src/boilerplate_gen_annotations.dart';
+import 'package:biscuit_auth/src/collection.dart';
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
 
@@ -21,22 +22,32 @@ part 'gen/rule.bp.dart';
 @boilerplate
 final class const Rule._(
   final Predicate head,
-  final List<Predicate> body,
-  final List<Expression> expressions,
-  final List<Scope> scopes,
+  final UnmodifiableList<Predicate> body,
+  final UnmodifiableList<Expression> expressions,
+  final UnmodifiableList<Scope> scopes,
 ) {
   factory({
     required SymbolId headName,
     required List<Term> headTerms,
     required List<Predicate> predicates,
-  }) => ._(.new(headName, headTerms), predicates, [], []);
+  }) => ._(
+    .new(headName, headTerms),
+    .new(predicates),
+    const .new([]),
+    const .new([]),
+  );
 
   factory withExpressions({
     required SymbolId headName,
     required List<Term> headTerms,
     required List<Predicate> predicates,
     required List<Expression> expressions,
-  }) => ._(.new(headName, headTerms), predicates, expressions, []);
+  }) => ._(
+    .new(headName, headTerms),
+    .new(predicates),
+    .new(expressions),
+    const .new([]),
+  );
 
   HashSet<SymbolId> variablesSet() {
     final result = HashSet<SymbolId>();
@@ -56,7 +67,7 @@ final class const Rule._(
   ) {
     return FactCombinator(
           variables: .new(variablesSet()),
-          predicates: body,
+          predicates: body.slice(0, body.length),
           facts: facts,
           symbols: symbols,
         )

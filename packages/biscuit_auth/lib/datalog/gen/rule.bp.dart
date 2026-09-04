@@ -12,19 +12,22 @@ extension $RuleExtension on Rule {
       identical(this, other) ||
       other is Rule &&
           head == other.head &&
-          const ListEquality<Predicate>().equals(body, other.body) &&
-          const ListEquality<Expression>().equals(
-            expressions,
-            other.expressions,
+          const ListEquality<Predicate>().equals(
+            body.value,
+            other.body.value,
           ) &&
-          const ListEquality<Scope>().equals(scopes, other.scopes);
+          const ListEquality<Expression>().equals(
+            expressions.value,
+            other.expressions.value,
+          ) &&
+          const ListEquality<Scope>().equals(scopes.value, other.scopes.value);
 
   int get _hashCode => Object.hash(
     'Rule',
     head,
-    const ListEquality<Predicate>().hash(body),
-    const ListEquality<Expression>().hash(expressions),
-    const ListEquality<Scope>().hash(scopes),
+    const ListEquality<Predicate>().hash(body.value),
+    const ListEquality<Expression>().hash(expressions.value),
+    const ListEquality<Scope>().hash(scopes.value),
   );
 
   String _toString() =>

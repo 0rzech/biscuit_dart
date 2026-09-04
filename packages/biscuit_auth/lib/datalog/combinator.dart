@@ -14,7 +14,7 @@ import 'package:meta/meta.dart';
 @immutable
 final class const FactCombinator({
   required final MatchedVariables variables,
-  required final List<Predicate> predicates,
+  required final ListSlice<Predicate> predicates,
   required final Iterable<(Origin, Fact)> facts,
   required final SymbolTable symbols,
 }) extends Iterable<(Origin, HashMap<SymbolId, Term>)> {

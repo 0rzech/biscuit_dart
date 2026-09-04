@@ -8,6 +8,7 @@ import 'package:biscuit_auth/parser/builder/expression/op.dart';
 import 'package:biscuit_auth/parser/builder/fact.dart';
 import 'package:biscuit_auth/parser/builder/scope.dart';
 import 'package:biscuit_auth/src/boilerplate_gen_annotations.dart';
+import 'package:biscuit_auth/src/collection.dart';
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
 
@@ -17,10 +18,10 @@ part 'gen/rule.bp.dart';
 @boilerplate
 final class const Rule._({
   required final Predicate head,
-  required final List<Predicate> body,
-  required final List<Expression> expressions,
+  required final UnmodifiableList<Predicate> body,
+  required final UnmodifiableList<Expression> expressions,
   required final HashMap<String, Term?>? parameters,
-  required final List<Scope> scopes,
+  required final UnmodifiableList<Scope> scopes,
   required final HashMap<String, PublicKey?>? scopeParameters,
 }) {
   factory({
@@ -56,10 +57,10 @@ final class const Rule._({
 
     return ._(
       head: head,
-      body: predicates,
-      expressions: expressions,
+      body: .new(predicates),
+      expressions: .new(expressions),
       parameters: parameters,
-      scopes: scopes,
+      scopes: .new(scopes),
       scopeParameters: scopeParameters,
     );
   }

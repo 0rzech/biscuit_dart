@@ -3,6 +3,7 @@
 
 import 'dart:collection';
 
+import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
 
 @internal
@@ -11,4 +12,6 @@ bool disjoint<T>(Iterable<T> i1, Iterable<T> i2) =>
 
 @internal
 extension type const UnmodifiableList<T>(final List<T> value)
-    implements Iterable<T>;
+    implements Iterable<T> {
+  ListSlice<T> slice(int start, [int? end]) => value.slice(start, end);
+}
