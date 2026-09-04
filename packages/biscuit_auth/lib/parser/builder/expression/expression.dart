@@ -4,6 +4,7 @@
 import 'package:biscuit_auth/parser/builder/expression/op.dart';
 import 'package:biscuit_auth/parser/expression.dart';
 import 'package:biscuit_auth/src/boilerplate_gen_annotations.dart';
+import 'package:biscuit_auth/src/collection.dart';
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
 
@@ -11,7 +12,11 @@ part 'gen/expression.bp.dart';
 
 @immutable
 @boilerplate
-final class const Expression(final List<Op> ops) {
+final class Expression {
+  final UnmodifiableList<Op> ops;
+
+  new(List<Op> ops) : ops = .new(ops);
+
   factory fromAst(Expr expr) => .new(expr.toOpcodes());
 
   @override

@@ -45,17 +45,19 @@ final class BoilerplateGenerator(final DartEmitter _emitter)
       final equalityFields = classFields.map((f) {
         final type = f.type;
 
-        if (_asList(type) case final type?) {
+        if (asList(type) case final type?) {
           mustImportCollection = true;
-          return _collectionEquals('ListEquality', type, f);
-        } else if (_asMap(type) case final type?) {
+          return colEq('ListEquality', type, [f]);
+        } else if (asMap(type) case final type?) {
           mustImportCollection = true;
-          return _collectionEquals('MapEquality', type, f);
-        } else if (_asSet(type) case final type?) {
+          return colEq('MapEquality', type, [f]);
+        } else if (asSet(type) case final type?) {
           mustImportCollection = true;
-          return _collectionEquals('SetEquality', type, f);
+          return colEq('SetEquality', type, [f]);
+        } else if (asUnmodifiableList(type) case (final type, final elem)?) {
+          return colEq('ListEquality', type, [f, elem]);
         } else {
-          return _fieldRef(f).equalTo(_otherFieldRef(f));
+          return elemRef(f).equalTo(propChain([f], first: other));
         }
       });
 
@@ -98,14 +100,16 @@ final class BoilerplateGenerator(final DartEmitter _emitter)
       final hashFields = classFields.map((f) {
         final type = f.type;
 
-        if (_asList(type) case final type?) {
-          return _collectionHash('ListEquality', type, f);
-        } else if (_asMap(type) case final type?) {
-          return _collectionHash('MapEquality', type, f);
-        } else if (_asSet(type) case final type?) {
-          return _collectionHash('SetEquality', type, f);
+        if (asList(type) case final type?) {
+          return colHash('ListEquality', type, [f]);
+        } else if (asMap(type) case final type?) {
+          return colHash('MapEquality', type, [f]);
+        } else if (asSet(type) case final type?) {
+          return colHash('SetEquality', type, [f]);
+        } else if (asUnmodifiableList(type) case (final type, final elem)?) {
+          return colHash('ListEquality', type, [f, elem]);
         } else {
-          return _fieldRef(f);
+          return elemRef(f);
         }
       });
 
@@ -140,97 +144,136 @@ final class BoilerplateGenerator(final DartEmitter _emitter)
 
     return _emitter.visitExtension(extensionBuilder.build()).toString();
   }
+}
 
-  List<FieldElement> getAllFields(ClassElement element) {
-    final fields = <FieldElement>[];
+List<FieldElement> getAllFields(ClassElement element) {
+  final fields = <FieldElement>[];
 
-    for (final type in element.allSupertypes.reversed.where((t) {
-      return !t.isDartCoreObject;
-    })) {
-      fields.addAll(
-        type.element.fields.where((f) {
-          return !(f.isStatic || f.isOriginGetterSetter);
-        }),
-      );
-    }
-
+  for (final type in element.allSupertypes.reversed.where(
+    (t) => !t.isDartCoreObject,
+  )) {
     fields.addAll(
-      element.fields.where((f) {
+      type.element.fields.where((f) {
         return !(f.isStatic || f.isOriginGetterSetter);
       }),
     );
-
-    return fields;
   }
 
-  InterfaceType? _asList(DartType type) {
-    if (type is! InterfaceType) return null;
-    if (type.isDartCoreList) return type;
-    return type.allSupertypes.firstWhereOrNull((t) => t.isDartCoreList);
-  }
+  fields.addAll(
+    element.fields.where((f) {
+      return !(f.isStatic || f.isOriginGetterSetter);
+    }),
+  );
 
-  InterfaceType? _asSet(DartType type) {
-    if (type is! InterfaceType) return null;
-    if (type.isDartCoreSet) return type;
-    return type.allSupertypes.firstWhereOrNull((t) => t.isDartCoreSet);
-  }
+  return fields;
+}
 
-  InterfaceType? _asMap(DartType type) {
-    if (type is! InterfaceType) return null;
-    if (type.isDartCoreMap) return type;
-    return type.allSupertypes.firstWhereOrNull((t) => t.isDartCoreMap);
-  }
+InterfaceType? asList(DartType type) {
+  if (type is! InterfaceType) return null;
+  if (type.isDartCoreList) return type;
+  return type.allSupertypes.firstWhereOrNull((t) => t.isDartCoreList);
+}
 
-  Expression _collectionEquals(
-    String className,
-    InterfaceType type,
-    FieldElement field,
-  ) {
-    return TypeReference((builder) {
-          builder.symbol = className;
-          builder.types.addAll(type.typeArguments.map(_toTypeRef));
-        })
-        .constInstance(const [])
-        .property('equals')
-        .call([_fieldRef(field), _otherFieldRef(field)]);
-  }
+InterfaceType? asSet(DartType type) {
+  if (type is! InterfaceType) return null;
+  if (type.isDartCoreSet) return type;
+  return type.allSupertypes.firstWhereOrNull((t) => t.isDartCoreSet);
+}
 
-  Expression _collectionHash(
-    String className,
-    InterfaceType type,
-    FieldElement field,
-  ) => TypeReference((builder) {
-    builder.symbol = className;
-    builder.types.addAll(type.typeArguments.map(_toTypeRef));
-  }).constInstance(const []).property('hash').call([_fieldRef(field)]);
+InterfaceType? asMap(DartType type) {
+  if (type is! InterfaceType) return null;
+  if (type.isDartCoreMap) return type;
+  return type.allSupertypes.firstWhereOrNull((t) => t.isDartCoreMap);
+}
 
-  Expression _fieldRef(FieldElement field) => refer(_fieldName(field));
+(InterfaceType, Element)? asUnmodifiableList(DartType type) {
+  if (type is! InterfaceType) return null;
+  if (!unmodifiableListChecker.isExactlyType(type)) return null;
 
-  Expression _otherFieldRef(FieldElement field) =>
-      other.property(_fieldName(field));
-
-  String _fieldName(FieldElement field) {
-    if (field.name case final name?) return name;
-
+  final element = type.element;
+  if (element is! ExtensionTypeElement) {
     throw InvalidGenerationSourceError(
-      'Boilerplate cannot be generated for unnamed fields',
-      element: field,
+      'Expecting UnmodifiableList to be an extension type',
+      element: element,
     );
   }
 
-  TypeReference _toTypeRef(DartType type) => TypeReference((builder) {
-    builder.symbol = switch (type.element?.name) {
-      null => type is DynamicType ? 'dynamic' : 'void',
-      final name => name,
-    };
+  final name = element.representation.name;
+  if (name == null) {
+    throw InvalidGenerationSourceError(
+      'Missing UnmodifiableList representation name',
+      element: element,
+    );
+  }
 
-    builder.isNullable = type.nullabilitySuffix == .question;
+  final getter = element.getGetter(name);
+  if (getter == null) {
+    throw InvalidGenerationSourceError(
+      'Missing UnmodifiableList getter',
+      element: element,
+    );
+  }
 
-    builder.types.addAll(switch (type) {
-      final InterfaceType t => t.typeArguments.map(_toTypeRef),
-      _ => const [],
-    });
-  });
-
-  final other = refer('other');
+  return (type, getter);
 }
+
+Expression colEq(String className, InterfaceType type, List<Element> elements) {
+  return TypeReference((builder) {
+        builder.symbol = className;
+        builder.types.addAll(type.typeArguments.map(toTypeRef));
+      })
+      .constInstance(const [])
+      .property('equals')
+      .call([propChain(elements), propChain(elements, first: other)]);
+}
+
+Expression colHash(
+  String className,
+  InterfaceType type,
+  List<Element> elements,
+) => TypeReference((builder) {
+  builder.symbol = className;
+  builder.types.addAll(type.typeArguments.map(toTypeRef));
+}).constInstance(const []).property('hash').call([propChain(elements)]);
+
+Expression propChain(List<Element> elements, {Reference? first}) {
+  if (elements.isEmpty) throw ArgumentError('elements must not be empty');
+
+  return first == null
+      ? elements.skip(1).fold(elemRef(elements.first), prop)
+      : elements.fold(first, prop);
+}
+
+Expression prop(Expression expression, Element element) =>
+    expression.property(elemName(element));
+
+Expression elemRef(Element element) => refer(elemName(element));
+
+String elemName(Element element) {
+  if (element.name case final name?) return name;
+
+  throw InvalidGenerationSourceError(
+    'Boilerplate cannot be generated for unnamed fields',
+    element: element,
+  );
+}
+
+TypeReference toTypeRef(DartType type) => TypeReference((builder) {
+  builder.symbol = switch (type.element?.name) {
+    null => type is DynamicType ? 'dynamic' : 'void',
+    final name => name,
+  };
+
+  builder.isNullable = type.nullabilitySuffix == .question;
+
+  builder.types.addAll(switch (type) {
+    final InterfaceType t => t.typeArguments.map(toTypeRef),
+    _ => const [],
+  });
+});
+
+const unmodifiableListChecker = TypeChecker.fromUrl(
+  'package:biscuit_auth/src/collection.dart#UnmodifiableList',
+);
+
+final other = refer('other');

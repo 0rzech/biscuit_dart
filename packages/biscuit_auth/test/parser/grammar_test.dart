@@ -1280,8 +1280,8 @@ void main() {
           predicates: [
             .new('fact', const [.variable('var0'), .variable('var1')]),
           ],
-          expressions: const [
-            .new([.int(1), .int(2), .lessThan()]),
+          expressions: [
+            .new(const [.int(1), .int(2), .lessThan()]),
           ],
         ),
       ]);
@@ -1292,8 +1292,8 @@ void main() {
             headName: 'query',
             headTerms: const [],
             predicates: const [],
-            expressions: const [
-              .new([.int(1), .int(2), .equal()]),
+            expressions: [
+              .new(const [.int(1), .int(2), .equal()]),
             ],
           ),
         ]),
@@ -1311,8 +1311,8 @@ void main() {
             predicates: [
               .new('fact', const [.int(1234)]),
             ],
-            expressions: const [
-              .new([.str('test'), .str('abc'), .prefix()]),
+            expressions: [
+              .new(const [.str('test'), .str('abc'), .prefix()]),
             ],
           ),
         ]),
@@ -1347,8 +1347,8 @@ void main() {
             headName: 'query',
             headTerms: const [],
             predicates: const [],
-            expressions: const [
-              .new([.bool(true)]),
+            expressions: [
+              .new(const [.bool(true)]),
             ],
           ),
         ]),
@@ -1394,8 +1394,8 @@ void main() {
           predicates: [
             .new('fact', const [.variable('var0'), .variable('var1')]),
           ],
-          expressions: const [
-            .new([.int(1), .int(2), .lessThan()]),
+          expressions: [
+            .new(const [.int(1), .int(2), .lessThan()]),
           ],
         ),
       ]);
@@ -1406,8 +1406,8 @@ void main() {
             headName: 'query',
             headTerms: const [],
             predicates: const [],
-            expressions: const [
-              .new([.int(1), .int(2), .equal()]),
+            expressions: [
+              .new(const [.int(1), .int(2), .equal()]),
             ],
           ),
         ]),
@@ -1425,8 +1425,8 @@ void main() {
             predicates: [
               .new('fact', const [.int(1234)]),
             ],
-            expressions: const [
-              .new([.str('test'), .str('abc'), .prefix()]),
+            expressions: [
+              .new(const [.str('test'), .str('abc'), .prefix()]),
             ],
           ),
         ]),

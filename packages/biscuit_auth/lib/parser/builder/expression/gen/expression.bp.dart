@@ -10,10 +10,11 @@ part of '../expression.dart';
 extension $ExpressionExtension on Expression {
   bool _equals(Object other) =>
       identical(this, other) ||
-      other is Expression && const ListEquality<Op>().equals(ops, other.ops);
+      other is Expression &&
+          const ListEquality<Op>().equals(ops.value, other.ops.value);
 
   int get _hashCode =>
-      Object.hash('Expression', const ListEquality<Op>().hash(ops));
+      Object.hash('Expression', const ListEquality<Op>().hash(ops.value));
 
   String _toString() => 'Expression(ops: $ops)';
 }

@@ -8,6 +8,7 @@ import 'package:biscuit_auth/datalog/expression/op.dart';
 import 'package:biscuit_auth/datalog/symbol.dart';
 import 'package:biscuit_auth/error.dart';
 import 'package:biscuit_auth/src/boilerplate_gen_annotations.dart';
+import 'package:biscuit_auth/src/collection.dart';
 import 'package:biscuit_auth/token/builder/term.dart' as b;
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
@@ -45,7 +46,11 @@ final class const ExternFn(
 
 @immutable
 @boilerplate
-final class const Expression(final List<Op> ops) {
+final class Expression {
+  final UnmodifiableList<Op> ops;
+
+  new(List<Op> ops) : ops = .new(ops);
+
   Term eval(
     HashMap<SymbolId, Term> values,
     TemporarySymbolTable symbols,

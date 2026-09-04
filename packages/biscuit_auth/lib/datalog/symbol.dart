@@ -5,7 +5,7 @@ import 'package:biscuit_auth/crypto/crypto.dart';
 import 'package:biscuit_auth/datalog/expression/op.dart';
 import 'package:biscuit_auth/error.dart';
 import 'package:biscuit_auth/src/boilerplate_gen_annotations.dart';
-import 'package:biscuit_auth/src/disjoint_iterable.dart';
+import 'package:biscuit_auth/src/collection.dart';
 import 'package:biscuit_auth/token/public_keys.dart';
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';

@@ -70,28 +70,28 @@ void main() {
       final symbols = SymbolTable();
       final tmpSymbols = TemporarySymbolTable(symbols);
 
-      var expr = const Expression(<Op>[.int(1), .int(0), .div()]);
+      var expr = Expression(const [.int(1), .int(0), .div()]);
 
       expect(
         () => expr.eval(.identity(), tmpSymbols, .identity()),
         throwsA(const ExecutionError.divisionByZero()),
       );
 
-      expr = const Expression(<Op>[.int(1), .int(SymbolId.max), .add()]);
+      expr = Expression(const [.int(1), .int(SymbolId.max), .add()]);
 
       expect(
         () => expr.eval(.identity(), tmpSymbols, .identity()),
         throwsA(const ExecutionError.overflow()),
       );
 
-      expr = const Expression(<Op>[.int(-10), .int(SymbolId.max), .sub()]);
+      expr = Expression(const [.int(-10), .int(SymbolId.max), .sub()]);
 
       expect(
         () => expr.eval(.identity(), tmpSymbols, .identity()),
         throwsA(const ExecutionError.overflow()),
       );
 
-      expr = const Expression(<Op>[.int(2), .int(SymbolId.max), .mul()]);
+      expr = Expression(const [.int(2), .int(SymbolId.max), .mul()]);
 
       expect(
         () => expr.eval(.identity(), tmpSymbols, .identity()),
@@ -105,7 +105,7 @@ void main() {
         ..insert('test2')
         ..insert('var1');
 
-      var expr = const Expression(<Op>[
+      var expr = Expression(const [
         .int(-1),
         .variable(.new(1026)),
         .lessThan(),
@@ -113,23 +113,11 @@ void main() {
 
       expect(expr.stringify(symbols), '-1 < \$var1');
 
-      expr = const Expression(<Op>[
-        .int(1),
-        .int(2),
-        .int(3),
-        .add(),
-        .lessThan(),
-      ]);
+      expr = Expression(const [.int(1), .int(2), .int(3), .add(), .lessThan()]);
 
       expect(expr.stringify(symbols), '1 < 2 + 3');
 
-      expr = const Expression(<Op>[
-        .int(1),
-        .int(2),
-        .add(),
-        .int(3),
-        .lessThan(),
-      ]);
+      expr = Expression(const [.int(1), .int(2), .add(), .int(3), .lessThan()]);
 
       expect(expr.stringify(symbols), '1 + 2 < 3');
     });
@@ -268,7 +256,7 @@ void main() {
       final symbols = SymbolTable();
       final tmpSymbols = TemporarySymbolTable(symbols);
 
-      const expr = Expression([
+      final expr = Expression(const [
         .bool(false),
         .closure(
           params: [],
@@ -482,7 +470,7 @@ void main() {
       final symbols = SymbolTable();
       final tmpSymbols = TemporarySymbolTable(symbols);
 
-      var expr = const Expression([
+      var expr = Expression(const [
         .array([.int(0), .int(1)]),
         .array([.int(0), .int(1)]),
         .equal(),
@@ -492,7 +480,7 @@ void main() {
 
       expect(res, const Term.bool(true));
 
-      expr = const Expression([
+      expr = Expression(const [
         .array([.int(0), .int(1)]),
         .array([.int(0)]),
         .equal(),
@@ -502,7 +490,7 @@ void main() {
 
       expect(res, const Term.bool(false));
 
-      expr = const Expression([
+      expr = Expression(const [
         .array([.int(0), .int(1)]),
         .int(1),
         .contains(),
@@ -512,7 +500,7 @@ void main() {
 
       expect(res, const Term.bool(true));
 
-      expr = const Expression([
+      expr = Expression(const [
         .array([.int(0), .int(1)]),
         .int(2),
         .contains(),
@@ -522,7 +510,7 @@ void main() {
 
       expect(res, const Term.bool(false));
 
-      expr = const Expression([
+      expr = Expression(const [
         .array([.int(0), .int(1), .int(2)]),
         .array([.int(0), .int(1)]),
         .prefix(),
@@ -532,7 +520,7 @@ void main() {
 
       expect(res, const Term.bool(true));
 
-      expr = const Expression([
+      expr = Expression(const [
         .array([.int(0), .int(1), .int(2)]),
         .array([.int(2), .int(1)]),
         .prefix(),
@@ -542,7 +530,7 @@ void main() {
 
       expect(res, const Term.bool(false));
 
-      expr = const Expression([
+      expr = Expression(const [
         .array([.int(0), .int(1), .int(2)]),
         .array([.int(1), .int(2)]),
         .suffix(),
@@ -552,7 +540,7 @@ void main() {
 
       expect(res, const Term.bool(true));
 
-      expr = const Expression([
+      expr = Expression(const [
         .array([.int(0), .int(1), .int(2)]),
         .array([.int(0), .int(2)]),
         .suffix(),
@@ -562,7 +550,7 @@ void main() {
 
       expect(res, const Term.bool(false));
 
-      expr = const Expression([
+      expr = Expression(const [
         .array([.int(0), .int(1), .int(2)]),
         .int(1),
         .get(),
@@ -572,7 +560,7 @@ void main() {
 
       expect(res, const Term.int(1));
 
-      expr = const Expression([
+      expr = Expression(const [
         .array([.int(0), .int(1), .int(2)]),
         .int(3),
         .get(),
@@ -939,7 +927,7 @@ void main() {
       final symbols = SymbolTable();
       final tmpSymbols = TemporarySymbolTable(symbols);
 
-      var expr = const Expression([
+      var expr = Expression(const [
         .closure(
           params: [],
           ops: [.bool(true), .int(0), .greaterThan(), .parens()],
@@ -954,7 +942,7 @@ void main() {
 
       expect(res, const Term.bool(false));
 
-      expr = const Expression([
+      expr = Expression(const [
         .closure(params: [], ops: [.int(0), .int(0), .equal(), .parens()]),
         .bool(false),
         .tryOr(),
