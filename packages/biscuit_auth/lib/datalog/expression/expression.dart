@@ -121,14 +121,10 @@ final class Expression {
       }
     }
 
-    if (stack.length == 1) {
-      if (stack.removeLast() case final Term t) {
-        return t;
-      }
-      throw const ExecutionError.invalidStack();
-    }
-
-    throw const ExecutionError.invalidStack();
+    return switch (stack) {
+      [final Term t] => t,
+      _ => throw const ExecutionError.invalidStack(),
+    };
   }
 
   String? stringify(SymbolTable symbols) {
