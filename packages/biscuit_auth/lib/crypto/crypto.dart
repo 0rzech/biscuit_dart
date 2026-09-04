@@ -49,7 +49,9 @@ final class P256(final crypto.EcPublicKey _key) extends PublicKey {
 
   @override
   String stringify() => uint8ListToBytesStr(
-    .fromList([_key.y.last.isEven ? 0x2 : 0x3, ..._key.x]),
+    .new(_key.x.length + 1)
+      ..add(_key.y.last.isEven ? 0x2 : 0x3)
+      ..addAll(_key.x),
     prefix: 'secp256r1/',
   );
 
