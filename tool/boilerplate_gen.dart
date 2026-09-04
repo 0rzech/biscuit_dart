@@ -187,9 +187,14 @@ InterfaceType? asMap(DartType type) {
   return type.allSupertypes.firstWhereOrNull((t) => t.isDartCoreMap);
 }
 
-(InterfaceType, Element)? asControlledList(DartType type) {
-  if (type is! InterfaceType) return null;
-  if (!controlledListChecker.isExactlyType(type)) return null;
+(InterfaceType, Element)? asControlledList(DartType type) =>
+    extTypeGetter(type, controlledListChecker.isExactlyType);
+
+(InterfaceType, Element)? extTypeGetter(
+  DartType type,
+  bool Function(InterfaceType) meetsCriteria,
+) {
+  if (!(type is InterfaceType && meetsCriteria(type))) return null;
 
   final element = type.element;
   if (element is! ExtensionTypeElement) {
