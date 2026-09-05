@@ -3,3 +3,7 @@ Copyright 2026 Piotr Mieczysław Orzechowski
 
 This product includes software developed by
 Piotr Mieczysław Orzechowski (https://orzechowski.tech).
+
+This product includes lib/format/schema.proto, developed by
+Geoffroy Couprie and contributors to the Eclipse Foundation,
+licensed under the Apache License, Version 2.0.
