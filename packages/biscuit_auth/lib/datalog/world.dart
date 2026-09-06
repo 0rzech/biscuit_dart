@@ -89,6 +89,28 @@ final class World {
     return newFacts;
   }
 
+  bool queryMatch({
+    required Rule rule,
+    required SymbolId origin,
+    required TrustedOrigins scope,
+    required SymbolTable symbols,
+  }) => rule.findMatch(
+    _facts.trustedIterator(scope),
+    origin,
+    symbols,
+    _externFunctions,
+  );
+
+  bool queryMatchAll({
+    required Rule rule,
+    required TrustedOrigins scope,
+    required SymbolTable symbols,
+  }) => rule.checkMatchAll(
+    _facts.trustedIterator(scope),
+    symbols,
+    _externFunctions,
+  );
+
   String stringify(SymbolTable symbols) {
     final facts = _facts.value.entries
         .map((entry) => entry.value)
