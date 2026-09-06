@@ -2,12 +2,13 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import 'package:biscuit_auth/parser/builder/check.dart';
-import 'package:biscuit_auth/parser/builder/expression/op.dart';
+import 'package:biscuit_auth/parser/builder/expression.dart';
 import 'package:biscuit_auth/parser/builder/fact.dart';
 import 'package:biscuit_auth/parser/builder/policy.dart';
 import 'package:biscuit_auth/parser/builder/rule.dart';
-import 'package:biscuit_auth/parser/expression.dart';
-import 'package:biscuit_auth/parser/grammar.dart';
+import 'package:biscuit_auth/parser/grammar/grammar.dart';
+import 'package:biscuit_auth/parser/grammar/expr.dart';
+import 'package:biscuit_auth/parser/parser.dart';
 import 'package:kiri_check/kiri_check.dart';
 import 'package:petitparser/core.dart';
 import 'package:petitparser/parser.dart' as p;
@@ -15,52 +16,48 @@ import 'package:test/test.dart';
 
 void main() {
   group(DatalogGrammar, () {
-    late DatalogGrammar datalog;
-
-    setUp(() => datalog = const .new());
-
     property('name', () {
-      late Parser<String> parser;
+      final parser = grammar.buildFrom(grammar.name());
 
       forAll(variableArbitrary(), (name) {
         expectSuccess(parser.parse('$name("read")'), name);
-      }, setUpAll: () => parser = datalog.buildFrom(datalog.name()));
+      });
     });
 
     property('string', () {
-      late Parser<Term> parser;
+      final parser = grammar.buildFrom(grammar.str());
 
       forAll(stringArbitrary(), (tup) {
         expectSuccess(parser.parse('"${tup.string}"'), Term.str(tup.expected));
-      }, setUpAll: () => parser = datalog.buildFrom(datalog.str()));
+      });
     });
 
     property('integer', () {
-      late Parser<Term> parser;
+      final parser = grammar.buildFrom(grammar.integer());
 
       forAll(integer(), (i) {
         expectSuccess(parser.parse(i.toString()), Term.int(i));
-      }, setUpAll: () => parser = datalog.buildFrom(datalog.integer()));
+      });
     });
 
     property('date', () {
-      late Parser<Term> parser;
+      final parser = grammar.buildFrom(grammar.date());
 
       forAll(dateTime(), (date) {
         expectSuccess(parser.parse(date.toIso8601String()), Term.date(date));
-      }, setUpAll: () => parser = datalog.buildFrom(datalog.date()));
+      });
     });
 
     property('variable', () {
-      late Parser<Term> parser;
+      final parser = grammar.buildFrom(grammar.variable());
 
       forAll(variableArbitrary(), (variable) {
         expectSuccess(parser.parse('\$$variable'), Term.variable(variable));
-      }, setUpAll: () => parser = datalog.buildFrom(datalog.variable()));
+      });
     });
 
     property('parameter', () {
-      late Parser<Term> parser;
+      final parser = grammar.buildFrom(grammar.parameter());
 
       forAll(
         combine2(
@@ -70,18 +67,13 @@ void main() {
         (string) {
           expectSuccess(parser.parse('{$string}'), Term.parameter(string));
         },
-        setUpAll: () => parser = datalog.buildFrom(datalog.parameter()),
       );
     });
 
     group('constraint', () {
-      late Parser<List<Op>> parser;
-
-      setUp(() {
-        parser = datalog.buildFrom(
-          datalog.expr().map((expr) => expr.toOpcodes()),
-        );
-      });
+      final parser = grammar.buildFrom(
+        grammar.expr().map((expr) => expr.toOpcodes()),
+      );
 
       property('variable lessOrEqual to date', () {
         forAll(combine2(variableArbitrary(), dateTime()), (tup) {
@@ -208,22 +200,16 @@ void main() {
       });
 
       property('variable.length() equal to variable', () {
-        forAll(
-          combine2(variableArbitrary(), variableArbitrary()),
-          (tup) {
-            final result = parser.parse('\$${tup.$1}.length() === \$${tup.$2}');
+        forAll(combine2(variableArbitrary(), variableArbitrary()), (tup) {
+          final result = parser.parse('\$${tup.$1}.length() === \$${tup.$2}');
 
-            expectSuccess(result, <Op>[
-              .variable(tup.$1),
-              const .length(),
-              .variable(tup.$2),
-              const .equal(),
-            ]);
-          },
-          setUp: () => parser = datalog.buildFrom(
-            datalog.expr().map((expr) => expr.toOpcodes()),
-          ),
-        );
+          expectSuccess(result, <Op>[
+            .variable(tup.$1),
+            const .length(),
+            .variable(tup.$2),
+            const .equal(),
+          ]);
+        });
       });
 
       property('variable.length() heterogeneousEqual to variable', () {
@@ -253,22 +239,16 @@ void main() {
       });
 
       property('variable.length() heterogeneousNotEqual to variable', () {
-        forAll(
-          combine2(variableArbitrary(), variableArbitrary()),
-          (tup) {
-            final result = parser.parse('\$${tup.$1}.length() != \$${tup.$2}');
+        forAll(combine2(variableArbitrary(), variableArbitrary()), (tup) {
+          final result = parser.parse('\$${tup.$1}.length() != \$${tup.$2}');
 
-            expectSuccess(result, <Op>[
-              .variable(tup.$1),
-              const .length(),
-              .variable(tup.$2),
-              const .heterogeneousNotEqual(),
-            ]);
-          },
-          setUp: () => parser = datalog.buildFrom(
-            datalog.expr().map((expr) => expr.toOpcodes()),
-          ),
-        );
+          expectSuccess(result, <Op>[
+            .variable(tup.$1),
+            const .length(),
+            .variable(tup.$2),
+            const .heterogeneousNotEqual(),
+          ]);
+        });
       });
 
       property('negate variable equal to variable', () {
@@ -684,9 +664,7 @@ void main() {
     });
 
     group(Fact, () {
-      late Parser<Fact> parser;
-
-      setUp(() => parser = datalog.buildFrom(datalog.fact()));
+      final parser = factParser;
 
       property('with strings', () {
         forAll(combine2(stringArbitrary(), stringArbitrary()), (tup) {
@@ -730,9 +708,7 @@ void main() {
     });
 
     group(Rule, () {
-      late Parser<Rule> parser;
-
-      setUp(() => parser = datalog.buildFrom(datalog.rule()));
+      final parser = ruleParser;
 
       test('basic', () {
         final result = parser.parse(
@@ -820,9 +796,7 @@ void main() {
     });
 
     group(Check, () {
-      late Parser<Check> parser;
-
-      setUp(() => parser = datalog.buildFrom(datalog.check()));
+      final parser = grammar.buildFrom(grammar.check());
 
       test('valid', () {
         final result = parser.parse(
@@ -873,9 +847,7 @@ void main() {
     });
 
     group('expression', () {
-      late Parser<Expr> parser;
-
-      setUp(() => parser = datalog.buildFrom(datalog.expr()));
+      final parser = grammar.buildFrom(grammar.expr());
 
       property('negative number', () {
         forAll(integer(max: -1), (i) {
@@ -1236,7 +1208,8 @@ void main() {
     });
 
     test('source', () {
-      final parser = datalog.buildFrom(datalog.source());
+      final parser = sourceParser;
+
       const input = r'''
         fact("string");
         fact2(1234);
@@ -1358,7 +1331,8 @@ void main() {
     });
 
     test('block source', () {
-      final parser = datalog.buildFrom(datalog.blockSource());
+      final parser = blockSourceParser;
+
       const input = r'''
         fact("string");
         fact2(1234);

@@ -4,11 +4,11 @@
 import 'dart:collection';
 
 import 'package:biscuit_auth/datalog/symbol.dart';
-import 'package:biscuit_auth/datalog/expression/op.dart' as d;
+import 'package:biscuit_auth/datalog/expression.dart' as d;
 import 'package:biscuit_auth/error.dart';
-import 'package:biscuit_auth/parser/builder/expression/op.dart';
+import 'package:biscuit_auth/parser/builder/expression.dart';
 
-export 'package:biscuit_auth/parser/builder/expression/op.dart';
+export 'package:biscuit_auth/parser/builder/expression.dart';
 
 Term fromDatalog(d.Term term, TemporarySymbolTable symbols) {
   switch (term) {

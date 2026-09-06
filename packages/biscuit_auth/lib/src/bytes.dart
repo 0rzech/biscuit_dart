@@ -3,6 +3,9 @@
 
 import 'dart:typed_data';
 
+import 'package:meta/meta.dart';
+
+@internal
 Uint8List bytesStrToUint8List(String bytesStr) {
   final odd = bytesStr.length % 2 == 1;
   final bytes = Uint8List(bytesStr.length ~/ 2 + (odd ? 1 : 0));
@@ -23,6 +26,7 @@ Uint8List bytesStrToUint8List(String bytesStr) {
   return bytes;
 }
 
+@internal
 int hexFromCodeUnit(int codeUnit) => switch (codeUnit) {
   > 47 && < 58 => codeUnit - 48, // 0-9
   > 64 && < 71 => codeUnit - 55, // A-F
@@ -32,6 +36,7 @@ int hexFromCodeUnit(int codeUnit) => switch (codeUnit) {
   ),
 };
 
+@internal
 String uint8ListToBytesStr(Uint8List bytes, {String prefix = ''}) {
   final sb = StringBuffer(prefix);
 
@@ -43,6 +48,7 @@ String uint8ListToBytesStr(Uint8List bytes, {String prefix = ''}) {
   return sb.toString();
 }
 
+@internal
 int codeUnitFromHex(int nibble) => switch (nibble) {
   >= 0 && <= 9 => nibble + 48, // '0'-'9'
   >= 10 && <= 15 => nibble + 87, // 'a'-'f'

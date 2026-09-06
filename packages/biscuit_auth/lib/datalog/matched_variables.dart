@@ -3,7 +3,7 @@
 
 import 'dart:collection';
 
-import 'package:biscuit_auth/datalog/expression/op.dart';
+import 'package:biscuit_auth/datalog/expression.dart';
 import 'package:biscuit_auth/datalog/symbol.dart';
 import 'package:biscuit_auth/src/boilerplate_gen_annotations.dart';
 import 'package:collection/collection.dart';

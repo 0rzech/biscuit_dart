@@ -1,7 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format width=80
 
-part of '../expression.dart';
+part of '../expr.dart';
 
 // **************************************************************************
 // BoilerplateGenerator

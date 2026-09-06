@@ -3,8 +3,7 @@
 
 import 'dart:collection';
 
-import 'package:biscuit_auth/parser/builder/expression/expression.dart';
-import 'package:biscuit_auth/parser/builder/expression/op.dart';
+import 'package:biscuit_auth/parser/builder/expression.dart';
 import 'package:biscuit_auth/parser/builder/fact.dart';
 import 'package:biscuit_auth/parser/builder/scope.dart';
 import 'package:biscuit_auth/src/boilerplate_gen_annotations.dart';

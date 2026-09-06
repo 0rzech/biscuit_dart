@@ -3,11 +3,10 @@
 
 import 'dart:collection';
 
-import 'package:biscuit_auth/datalog/expression/expression.dart';
-import 'package:biscuit_auth/datalog/expression/op.dart';
+import 'package:biscuit_auth/datalog/expression.dart';
 import 'package:biscuit_auth/datalog/symbol.dart';
 import 'package:biscuit_auth/error.dart';
-import 'package:biscuit_auth/parser/builder/expression/op.dart' as b;
+import 'package:biscuit_auth/parser/builder/expression.dart' as b;
 import 'package:test/test.dart';
 
 void main() {

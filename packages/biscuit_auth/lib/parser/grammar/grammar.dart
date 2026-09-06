@@ -3,26 +3,25 @@
 
 import 'dart:collection';
 
-import 'package:biscuit_auth/parser/builder/bytes.dart';
 import 'package:biscuit_auth/parser/builder/check.dart';
-import 'package:biscuit_auth/parser/builder/expression/expression.dart';
-import 'package:biscuit_auth/parser/builder/expression/op.dart';
+import 'package:biscuit_auth/parser/builder/expression.dart';
 import 'package:biscuit_auth/parser/builder/fact.dart';
 import 'package:biscuit_auth/parser/builder/policy.dart';
 import 'package:biscuit_auth/parser/builder/rule.dart';
 import 'package:biscuit_auth/parser/builder/scope.dart';
-import 'package:biscuit_auth/parser/comment.dart';
-import 'package:biscuit_auth/parser/expression.dart';
-import 'package:biscuit_auth/parser/rule_body.dart';
-import 'package:biscuit_auth/parser/source.dart';
+import 'package:biscuit_auth/parser/builder/source.dart';
+import 'package:biscuit_auth/parser/grammar/comment.dart';
+import 'package:biscuit_auth/parser/grammar/expr.dart';
+import 'package:biscuit_auth/src/bytes.dart';
 import 'package:meta/meta.dart';
 import 'package:petitparser/petitparser.dart';
 
 @immutable
 final class const DatalogGrammar() extends GrammarDefinition {
   @override
-  Parser<Source> start() =>
-      throw UnimplementedError('Use source() or blockSource() parser instead');
+  Parser<Source> start() => throw UnimplementedError(
+    'Use source(), blockSource(), policy(), rule() or fact() instead',
+  );
 
   Parser<Source> source() {
     final body = [
@@ -136,7 +135,6 @@ final class const DatalogGrammar() extends GrammarDefinition {
         .labeled('publicKey');
   }
 
-  @visibleForTesting
   Parser<Rule> rule() =>
       ref0(ruleInner).skip(after: ref0(starSpace)).end().labeled('rule');
 
@@ -177,7 +175,14 @@ final class const DatalogGrammar() extends GrammarDefinition {
           .labeled('ruleHead');
 
   @visibleForTesting
-  Parser<RuleBody> ruleBody() {
+  Parser<
+    ({
+      List<Predicate> predicates,
+      List<Expression> expressions,
+      List<Scope> scopes,
+    })
+  >
+  ruleBody() {
     return seq2(ref0(predicateOrExpr), ref0(scopes))
         .map2((predicatesOrExprs, scopes) {
           final predicates = <Predicate>[];
@@ -206,7 +211,6 @@ final class const DatalogGrammar() extends GrammarDefinition {
         .labeled('ruleBody');
   }
 
-  @visibleForTesting
   Parser<Fact> fact() =>
       ref0(factInner)
           .skip(before: ref0(starSpace), after: ref0(starSpace))
@@ -224,7 +228,6 @@ final class const DatalogGrammar() extends GrammarDefinition {
           .map2((name, terms) => Fact(name, terms.elements))
           .labeled('factInner');
 
-  @visibleForTesting
   Parser<Check> check() =>
       ref0(checkInner).skip(after: ref0(starSpace)).end().labeled('check');
 
@@ -259,7 +262,6 @@ final class const DatalogGrammar() extends GrammarDefinition {
           )
           .labeled('checkBody');
 
-  @visibleForTesting
   Parser<Policy> policy() =>
       ref0(policyInner).skip(after: ref0(starSpace)).end().labeled('policy');
 

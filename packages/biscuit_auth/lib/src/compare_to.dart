@@ -5,6 +5,9 @@ import 'dart:collection';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:meta/meta.dart';
+
+@internal
 extension BoolCompareTo on bool {
   int compareTo(bool other) {
     final self = this ? 1 : 0, another = other ? 1 : 0;
@@ -12,6 +15,7 @@ extension BoolCompareTo on bool {
   }
 }
 
+@internal
 extension ListCompareTo<T extends Comparable<T>> on List<T> {
   int compareTo(List<T> other) {
     final minLength = min(length, other.length);
@@ -27,6 +31,7 @@ extension ListCompareTo<T extends Comparable<T>> on List<T> {
   }
 }
 
+@internal
 extension Uint8ListCompareTo on Uint8List {
   int compareTo(Uint8List other) {
     final minLength = min(length, other.length);
@@ -42,6 +47,7 @@ extension Uint8ListCompareTo on Uint8List {
   }
 }
 
+@internal
 extension SplayTreeSetCompareTo<T extends Comparable<T>> on SplayTreeSet<T> {
   int compareTo(SplayTreeSet<T> other) {
     final left = iterator;
@@ -63,6 +69,7 @@ extension SplayTreeSetCompareTo<T extends Comparable<T>> on SplayTreeSet<T> {
   }
 }
 
+@internal
 extension SplayTreeMapCompareTo<
   K extends Comparable<K>,
   V extends Comparable<V>
@@ -88,6 +95,7 @@ extension SplayTreeMapCompareTo<
   }
 }
 
+@internal
 extension MapEntryCompareTo<K extends Comparable<K>, V extends Comparable<V>>
     on MapEntry<K, V> {
   int compareTo(MapEntry<K, V> other) {

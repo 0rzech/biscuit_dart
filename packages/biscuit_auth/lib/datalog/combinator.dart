@@ -3,7 +3,7 @@
 
 import 'dart:collection';
 
-import 'package:biscuit_auth/datalog/expression/op.dart';
+import 'package:biscuit_auth/datalog/expression.dart';
 import 'package:biscuit_auth/datalog/fact.dart';
 import 'package:biscuit_auth/datalog/matched_variables.dart';
 import 'package:biscuit_auth/datalog/origin.dart';

@@ -1,8 +1,8 @@
 // Copyright 2026 Piotr Mieczysław Orzechowski
 // SPDX-License-Identifier: Apache-2.0
 
-import 'package:biscuit_auth/parser/builder/bytes.dart';
 import 'package:biscuit_auth/src/boilerplate_gen_annotations.dart';
+import 'package:biscuit_auth/src/bytes.dart';
 import 'package:cryptography/cryptography.dart' as crypto;
 import 'package:meta/meta.dart';
 

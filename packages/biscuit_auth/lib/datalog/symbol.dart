@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import 'package:biscuit_auth/crypto/crypto.dart';
-import 'package:biscuit_auth/datalog/expression/op.dart';
+import 'package:biscuit_auth/datalog/expression.dart';
 import 'package:biscuit_auth/error.dart';
 import 'package:biscuit_auth/src/boilerplate_gen_annotations.dart';
 import 'package:biscuit_auth/src/collection.dart';

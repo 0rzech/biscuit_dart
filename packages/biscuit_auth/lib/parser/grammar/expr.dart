@@ -1,19 +1,19 @@
 // Copyright 2026 Piotr Mieczysław Orzechowski
 // SPDX-License-Identifier: Apache-2.0
 
-import 'package:biscuit_auth/parser/builder/expression/op.dart';
+import 'package:biscuit_auth/parser/builder/expression.dart';
 import 'package:biscuit_auth/src/boilerplate_gen_annotations.dart';
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
 
-part 'gen/expression.bp.dart';
+part 'gen/expr.bp.dart';
 
 @immutable
 sealed class const Expr() {
   const factory value(Term term) = ValueExpr;
-  const factory unary(Unary op, Expr expr) = UnaryExpr;
+  const factory unary(Unary op, Expr node) = UnaryExpr;
   const factory binary(Binary op, Expr left, Expr right) = BinaryExpr;
-  const factory closure(List<String> params, Expr expr) = ClosureExpr;
+  const factory closure(List<String> params, Expr node) = ClosureExpr;
 
   bool get isComparison => false;
 
