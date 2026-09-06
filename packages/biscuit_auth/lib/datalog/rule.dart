@@ -112,6 +112,69 @@ final class const Rule._(
         .whereType<(Origin, Fact)>();
   }
 
+  bool findMatch(
+    Iterable<(Origin, Fact)> facts,
+    SymbolId ruleOrigin,
+    SymbolTable symbols,
+    HashMap<String, ExternFn> externFunctions,
+  ) => apply(facts, ruleOrigin, symbols, externFunctions).isNotEmpty;
+
+  bool checkMatchAll(
+    Iterable<(Origin, Fact)> facts,
+    SymbolTable symbols,
+    HashMap<String, ExternFn> externFunctions,
+  ) {
+    var found = false;
+
+    for (final (_, variables) in FactCombinator(
+      variables: .new(variablesSet()),
+      predicates: body.slice(0, body.length),
+      facts: facts,
+      symbols: symbols,
+    )) {
+      found = true;
+      final temporarySymbols = TemporarySymbolTable(symbols);
+
+      for (final e in expressions) {
+        switch (e.eval(variables, temporarySymbols, externFunctions)) {
+          case Bool(value: final isMatch):
+            if (!isMatch) return false;
+
+          default:
+            throw const ExecutionError.invalidType();
+        }
+      }
+    }
+
+    return found;
+  }
+
+  String? validateVariables(SymbolTable symbols) {
+    final headVariables = HashSet<SymbolId>();
+
+    for (final term in head.terms) {
+      if (term case Variable(:final id)) headVariables.add(id);
+    }
+
+    for (final predicate in body) {
+      for (final term in predicate.terms) {
+        if (term case Variable(:final id)) {
+          headVariables.remove(id);
+          if (headVariables.isEmpty) return null;
+        }
+      }
+    }
+
+    if (headVariables.isEmpty) return null;
+
+    final names = headVariables
+        .map((s) => '\$${symbols.getOrDefault(s)}')
+        .join(', ');
+
+    return 'rule head contains variables that are not used in predicates'
+        "of the rule's body: $names";
+  }
+
   String stringify(SymbolTable symbols) {
     final sb = StringBuffer(head.stringify(symbols))
       ..write(' <- ')
