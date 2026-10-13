@@ -1,0 +1,28 @@
+[package]
+name = "biscuit_dart_native"
+version = "0.1.0"
+edition = "2024"
+
+[features]
+default = ["pem"]
+pem = ["ed25519-dalek/pem", "ed25519-dalek/pkcs8"]
+serde-error = ["serde"]
+web = ["wasm-bindgen"]
+
+[lib]
+crate-type = ["cdylib", "staticlib"]
+
+[dependencies]
+ecdsa = { version = "0.16.9", features = ["signing", "verifying", "pem", "alloc", "pkcs8", "serde"] }
+ed25519-dalek = { version = "2.2.0", features = ["pkcs8", "rand_core", "zeroize"] }
+elliptic-curve = { version = "0.13.8", features = ["pkcs8"] }
+hex = "0.4.3"
+p256 = "0.13.2"
+pkcs8 = "0.9.0"
+rand_core = "0.6.4"
+rand = "0.8.8"
+serde = { version = "1.0.229", optional = true, features = ["derive"] }
+thiserror = "2.0.21"
+uuid = "1.26.1"
+wasm-bindgen = { version = "0.2.128", optional = true }
+zeroize = { version = "1.9.0", default-features = false }

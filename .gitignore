@@ -49,3 +49,7 @@ app.*.map.json
 **/android/app/release
 
 **/l10n/missing.json
+
+# Rust related
+**/target
+**/tarpaulin-report.html
